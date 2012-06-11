@@ -25,7 +25,7 @@ cimport numpy
 # For csc_matrix returned by local_gdist_matrix()
 import scipy.sparse
 
-# Pre-cdef'd containers from the C++ standard library
+# Pre-cdef'd containers from the C++ standard library   
 from libcpp.vector cimport vector
 
 ################################################################################
