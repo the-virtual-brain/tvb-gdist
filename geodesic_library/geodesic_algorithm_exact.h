@@ -680,7 +680,7 @@ inline void GeodesicAlgorithmExact::propagate(std::vector<SurfacePoint>& sources
 
 inline bool GeodesicAlgorithmExact::check_stop_conditions(unsigned& index)
 {
-    double queue_distance = (*m_queue.begin())->min();
+    double queue_distance = m_queue.empty() ? GEODESIC_INF : (*m_queue.begin())->min();
     if(queue_distance < stop_distance())
     {
         return false;
