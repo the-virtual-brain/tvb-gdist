@@ -96,3 +96,6 @@ Danil Kirsanov, 01/2008
 
 CHANGE ON 03/02/08
 - resolved a name conflict with some versions of gcc
+
+CHANGE ON 2012 (Knock & Gaurav)
+- small fixes to make it compatible with cython
