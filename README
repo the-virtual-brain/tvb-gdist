@@ -5,4 +5,5 @@ http://code.google.com/p/geodesic/
 
 We added a python wrapped and made small fixes to the original library, to make it compatible with cython.
 
-To install this, run "python setup.py install" in folder geodesic_library.
+To install this, run "python setup.py install" in current folder.
+Python 2.7, Cython, and other python libraries are required to be installed previously by you.
