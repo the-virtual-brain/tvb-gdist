@@ -1,6 +1,8 @@
-    External Library Geodesic
+External Library Geodesic
 
 Original library (published under MIT license):
-    http://code.google.com/p/geodesic/
+http://code.google.com/p/geodesic/
 
 We added a python wrapped and made small fixes to the original library, to make it compatible with cython.
+
+To install this, run "python setup.py install" in folder geodesic_library.
