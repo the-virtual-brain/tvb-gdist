@@ -55,4 +55,22 @@ include_directories = [numpy.get_include(), # NumPy dtypes
 
 setup(ext_modules = geodesic_module, 
       include_dirs = include_directories, 
-      cmdclass = {'build_ext': build_ext})
+      cmdclass = {'build_ext': build_ext},
+      name='gdist',
+      version='1.0',
+      url='https://github.com/the-virtual-brain/external_geodesic_library',
+      maintainer='Marmaduke Woodman',
+      maintainer_email='mmwoodman@gmail.com',
+      description="Compute geodesic distances",
+      long_description="""
+The gdist module is a Cython interface to a C++ library 
+(http://code.google.com/p/geodesic/) for computing
+geodesic distance which is the length of shortest line between two 
+vertices on a triangulated mesh in three dimensions, such that the line
+lies on the surface. 
+
+The algorithm is due Mitchell, Mount and Papadimitriou, 1987; the implementation
+is due to Danil Kirsanov and the Cython interface to Gaurav Malhotra and 
+Stuart Knock. 
+"""
+)
