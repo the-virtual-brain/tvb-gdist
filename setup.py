@@ -57,10 +57,11 @@ setup(ext_modules = geodesic_module,
       include_dirs = include_directories, 
       cmdclass = {'build_ext': build_ext},
       name='gdist',
-      version='1.0',
+      version='1.0.2',
       url='https://github.com/the-virtual-brain/external_geodesic_library',
       maintainer='Marmaduke Woodman',
       maintainer_email='mmwoodman@gmail.com',
+      install_requires=['numpy', 'cython'],
       description="Compute geodesic distances",
       long_description="""
 The gdist module is a Cython interface to a C++ library 
