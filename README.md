@@ -1,6 +1,6 @@
 # External Library Geodesic
 
-[![Build Status](https://travis-ci.org/mmwoodman/geodesic_distance.png?branch=trunk)](https://travis-ci.org/mmwoodman/geodesic_distance)
+[![Build Status](https://travis-ci.org/maedoc/tvb-geodesic.png?branch=trunk)](https://travis-ci.org/maedoc/tvb-geodesic)
 
 Original library (published under MIT license):
 http://code.google.com/p/geodesic/
