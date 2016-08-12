@@ -42,7 +42,6 @@ To build::
 
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext as _build_ext
-import pkg_resources
 
 
 class build_ext(_build_ext):
