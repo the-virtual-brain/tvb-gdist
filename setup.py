@@ -29,7 +29,7 @@
 #
 
 """
-This module the building of a cython wrapper around a C++ library for 
+This module the building of a cython wrapper around a C++ library for
 calculating the geodesic distance between points on a mesh surface.
 
 To build::
@@ -40,18 +40,31 @@ To build::
 
 """
 
-import numpy
+from setuptools import setup, Extension
+from setuptools.command.build_ext import build_ext as _build_ext
+import pkg_resources
 
-from distutils.core import setup
-from distutils.extension import Extension
-from Cython.Distutils import build_ext
 
-geodesic_module = [Extension(name="gdist",              # Name of extension
-                             sources=["gdist.pyx"],     # Filename of Cython source
-                             language="c++")]           # Cython create C++ source
+class build_ext(_build_ext):
+    def finalize_options(self):
+        super(build_ext, self).finalize_options()
+        import numpy
+        numpy_inc = numpy.get_include()
+        for ext in self.extensions:
+            ext.include_dirs.append(numpy_inc)
 
-include_directories = [numpy.get_include(),     # NumPy dtypes
-                       "geodesic_library"]      # geodesic distance, C++ library.
+
+geodesic_module = [
+        Extension(
+            # Name of extension
+            name="gdist",
+            # Filename of Cython source
+            sources=["gdist.pyx"],
+            # Include files directory (numpy include directory will be
+            # appended later)
+            include_dirs=["geodesic_library"],
+            language="c++")
+]
 
 long_description = """
 The gdist module is a Cython interface to a C++ library
@@ -60,13 +73,12 @@ geodesic distance which is the length of shortest line between two
 vertices on a triangulated mesh in three dimensions, such that the line
 lies on the surface.
 
-The algorithm is due Mitchell, Mount and Papadimitriou, 1987; the implementation
-is due to Danil Kirsanov and the Cython interface to Gaurav Malhotra and
-Stuart Knock.
-"""
+The algorithm is due Mitchell, Mount and Papadimitriou, 1987; the
+implementation is due to Danil Kirsanov and the Cython interface to Gaurav
+Malhotra and Stuart Knock."""
 
 setup(ext_modules=geodesic_module,
-      include_dirs=include_directories,
+      include_dirs=["geodesic_library"],
       cmdclass={'build_ext': build_ext},
       name='gdist',
       license='GPL 2',
