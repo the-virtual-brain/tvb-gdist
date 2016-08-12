@@ -45,12 +45,12 @@ from setuptools.command.build_ext import build_ext as _build_ext
 
 
 class build_ext(_build_ext):
-    def finalize_options(self):
-        super(build_ext, self).finalize_options()
+    def run(self):
         import numpy
         numpy_inc = numpy.get_include()
         for ext in self.extensions:
             ext.include_dirs.append(numpy_inc)
+        super(build_ext, self).run()
 
 
 geodesic_module = [
