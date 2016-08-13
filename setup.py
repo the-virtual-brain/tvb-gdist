@@ -50,7 +50,7 @@ class build_ext(_build_ext):
         numpy_inc = numpy.get_include()
         for ext in self.extensions:
             ext.include_dirs.append(numpy_inc)
-        super(build_ext, self).run()
+        _build_ext.run(self)
 
 
 geodesic_module = [
