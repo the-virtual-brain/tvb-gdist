@@ -80,4 +80,3 @@ setuptools.setup(name="tvb-" + GEODESIC_NAME,
 
 shutil.rmtree('tvb_gdist.egg-info', True)
 shutil.rmtree('build', True)
-os.remove(GEODESIC_NAME + '.cpp')
