@@ -79,5 +79,4 @@ setuptools.setup(name="tvb-" + GEODESIC_NAME,
                  keywords="gdist geodesic distance geo tvb")
 
 shutil.rmtree('tvb_gdist.egg-info', True)
-os.remove(GEODESIC_NAME + '.cpp')
 shutil.rmtree('build', True)
