@@ -1,0 +1,36 @@
+tvb-gdist (1.5.6-5) unstable; urgency=medium
+
+  * update source. Closes: #896927
+  * update Vcs-Browser
+  * update Vcs-git
+  * update Uploaders
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Fri, 29 Jun 2018 08:50:33 -0000
+
+tvb-gdist (1.5.6-4) UNRELEASED; urgency=low
+
+  * fix missing libraries and metadata. Closes: #896927
+  * added test
+  * fix binding
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Thu, 28 Jun 2018 10:00:02 +0000
+
+tvb-gdist (1.5.6-3) UNRELEASED; urgency=low
+
+  * Update linsence and control file. Closes: #896927
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Thu, 28 Jun 2018 06:32:12 +0000
+
+tvb-gdist (1.5.6-2) UNRELEASED; urgency=low
+
+  * Added missing libraries. Closes: #896927
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Wed, 27 Jun 2018 06:48:31 -0600
+
+tvb-gdist (1.5.6-1) UNRELEASED; urgency=low
+
+  * Initial release. Closes: #896927
+  * First tvb-gdist on debian
+  * update it.
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Tue, 26 Jun 2018 08:48:31 -0400
