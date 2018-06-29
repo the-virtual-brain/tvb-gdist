@@ -1,3 +1,9 @@
+tvb-gdist (1.5.6-6) unstable; urgency=medium
+
+  * fix hardening-no-bindnow. Closes: #896927
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Fri, 29 Jun 2018 09:51:13 -0000
+
 tvb-gdist (1.5.6-5) unstable; urgency=medium
 
   * update source. Closes: #896927

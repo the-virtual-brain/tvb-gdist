@@ -9,7 +9,7 @@ Build-Depends: debhelper (>=11),
                python-numpy,
                python-scipy,
                cython
-Standards-Version: 4.1.4
+Standards-Version: 4.1.4.2
 Vcs-Browser: https://github.com/the-virtual-brain/tvb-geodesic
 Vcs-Git: https://github.com/the-virtual-brain/tvb-geodesic.git
 Homepage: https://github.com/the-virtual-brain/tvb-geodesic
