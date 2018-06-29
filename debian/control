@@ -1,6 +1,5 @@
 Source: tvb-gdist
 Maintainer: umar haruna abdullahi <umarbrowser20@gmail.com>
-Uploaders: umar haruna abdullahi <umarbrowser20@gmail.com>
 Section: python
 Priority: optional
 Build-Depends: debhelper (>=11),
