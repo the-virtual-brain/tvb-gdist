@@ -1,0 +1,2 @@
+Test-Command: python -m "gdist"
+Depends: python-numpy, python-scipy, cython
