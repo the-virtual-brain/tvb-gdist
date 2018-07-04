@@ -17,20 +17,7 @@ Homepage: http://www.thevirtualbrain.org
 Package: tvb-gdist
 Architecture: any
 Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
-Description: framework for the simulation of the dynamics large-scale brain networks
- the virtual brain is a framework for the simulation of the dynamics
- of large-scale brain networks with biologically realistic connectivity.
- the virtual brain uses tractographic data (DTI/DSI) to generate connectivity
- .
- matrices and build cortical and subcortical brain networks the connectivity
- matrix defines the connection strengths and time delays via signal transmission
- between all network nodes.various neural mass models are available in the
- repertoire of the virtual brain and define the dynamics of a network node.
- together, the neural mass models at the network nodes and the connectivity
- matrix define the Virtual Brain.
- .
- Description: ... -- C++ libraries
- this package is a Cython interface to a C++ library for computing geodesic
- distance which is the length of shortest line between two vertices on a
- triangulated mesh in three dimensions, such that the line lies on the surface.
- .
+Description: gdist module is a Cython interface
+ computing geodesic distance which is the length of shortest
+ line between two vertices on a triangulated mesh in three
+ dimensions, such that the line lies on the surface
