@@ -1,3 +1,10 @@
+tvb-gdist (1.5.6-2) unstable; urgency=medium
+
+  * Initial release. Closes: #896927
+  * Update Description
+
+ -- umar haruna abdullahi <umarbrowser20@gmail.com>  Wed, 04 Jul 2018 11:07:45 +0100
+
 tvb-gdist (1.5.6-1) unstable; urgency=medium
 
   * Initial release. Closes: #896927
