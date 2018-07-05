@@ -1,5 +1,5 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: tvb-library
+Upstream-Name: tvb-gdist
 Upstream-Contact: TVB TEAM <tvb.admin@thevirtualbrain.org>
 Source: https://github.com/the-virtual-brain/tvb-library
 
