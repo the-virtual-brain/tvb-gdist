@@ -42,5 +42,3 @@ installed (`apt-get install devscripts python-all-dev python-stdeb`)::
 
 
 and you should find a suitable deb file for your system.
-
- -- umar haruna abdullahi <umarbrowser20@gmail.com>  Sun, 01 Jul 2018 12:24:32 +0100
