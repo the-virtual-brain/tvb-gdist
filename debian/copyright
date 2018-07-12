@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: tvb-library
 Upstream-Contact: TVB TEAM <tvb.admin@thevirtualbrain.org>
-Source: https://github.com/the-virtual-brain/tvb-library
+Source: https://github.com/the-virtual-brain/tvb-geodesic
 
 Files: *
 Copyright: 2012-2017 Baycrest Centre for Geriatric Care ("Baycrest") and others
