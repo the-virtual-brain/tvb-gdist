@@ -74,8 +74,7 @@ setuptools.setup(name="tvb-" + GEODESIC_NAME,
                  license='GPL v3',
                  author=TEAM,
                  author_email='tvb.admin@thevirtualbrain.org',
-                 url='http://www.thevirtualbrain.org',
-                 download_url='https://github.com/the-virtual-brain/tvb-geodesic',
+                 url='https://github.com/the-virtual-brain/tvb-geodesic',
                  keywords="gdist geodesic distance geo tvb")
 
 shutil.rmtree('tvb_gdist.egg-info', True)
