@@ -1,0 +1,7 @@
+# Python gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+
+# Distribution / packaging
+dist/
