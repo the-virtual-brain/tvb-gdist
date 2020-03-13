@@ -160,10 +160,10 @@ class HalfEdge(object):
             return x.vertex_0 < y.vertex_0
 
     def __ne__(x, y):
-        return x.vertex_0 != y.vertex_0 or x.vertex_1 != y.vertex_1;
+        return x.vertex_0 != y.vertex_0 or x.vertex_1 != y.vertex_1
 
     def __eq__(x, y):
-        return x.vertex_0 == y.vertex_0 and x.vertex_1 == y.vertex_1;
+        return x.vertex_0 == y.vertex_0 and x.vertex_1 == y.vertex_1
 
 
 class SurfacePath(object):
@@ -178,11 +178,6 @@ class SurfacePath(object):
 
 
 # geodesic_algorithm_base.h
-
-
-
-
-
 
 
 class Base(object):
@@ -227,6 +222,3 @@ class Subdivision(Base):
 
 class Exact(Base):
     pass
-
-
-

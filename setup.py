@@ -29,7 +29,7 @@
 #
 
 """
-This module the building of a cython wrapper around a C++ library for 
+This module the building of a cython wrapper around a C++ library for
 calculating the geodesic distance between points on a mesh surface.
 
 To build::
@@ -48,13 +48,20 @@ from Cython.Distutils import build_ext
 
 GEODESIC_NAME = "gdist"
 
-GEODESIC_MODULE = [setuptools.Extension(name=GEODESIC_NAME,              # Name of extension
-                             sources=["gdist.pyx"],     # Filename of Cython source
-                             language="c++",           # Cython create C++ source
-                             define_macros=[('NDEBUG', 1)] )]  # Disable assertions; one is failing geodesic_mesh.h:405
+GEODESIC_MODULE = [
+    setuptools.Extension(
+        name=GEODESIC_NAME,  # Name of extension
+        sources=["gdist.pyx"],  # Filename of Cython source
+        language="c++",  # Cython create C++ source
+        # Disable assertions; one is failing geodesic_mesh.h:405
+        define_macros=[('NDEBUG', 1)]
+    )
+]
 
-INCLUDE_DIRS = [numpy.get_include(), # NumPy dtypes
-                       "geodesic_library"]  # geodesic distance, C++ library.
+INCLUDE_DIRS = [
+    numpy.get_include(),  # NumPy dtypes
+    "geodesic_library",  # geodesic distance, C++ library.
+]
 
 TEAM = "Danil Kirsanov, Gaurav Malhotra and Stuart Knock"
 
@@ -63,19 +70,21 @@ INSTALL_REQUIREMENTS = ['numpy', 'scipy', 'cython']
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fd:
     DESCRIPTION = fd.read()
 
-setuptools.setup(name="tvb-" + GEODESIC_NAME,
-                 version='1.5.6',
-                 ext_modules=GEODESIC_MODULE,
-                 include_dirs=INCLUDE_DIRS,
-                 cmdclass={'build_ext': build_ext},
-                 install_requires=INSTALL_REQUIREMENTS,
-                 description="Compute geodesic distances",
-                 long_description=DESCRIPTION,
-                 license='GPL v3',
-                 author=TEAM,
-                 author_email='tvb.admin@thevirtualbrain.org',
-                 url='https://github.com/the-virtual-brain/tvb-geodesic',
-                 keywords="gdist geodesic distance geo tvb")
+setuptools.setup(
+    name="tvb-" + GEODESIC_NAME,
+    version='1.5.6',
+    ext_modules=GEODESIC_MODULE,
+    include_dirs=INCLUDE_DIRS,
+    cmdclass={'build_ext': build_ext},
+    install_requires=INSTALL_REQUIREMENTS,
+    description="Compute geodesic distances",
+    long_description=DESCRIPTION,
+    license='GPL v3',
+    author=TEAM,
+    author_email='tvb.admin@thevirtualbrain.org',
+    url='https://github.com/the-virtual-brain/tvb-geodesic',
+    keywords="gdist geodesic distance geo tvb"
+)
 
 shutil.rmtree('tvb_gdist.egg-info', True)
 if os.path.exists(GEODESIC_NAME + '.cpp'):
