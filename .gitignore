@@ -5,3 +5,6 @@ __pycache__/
 
 # Distribution / packaging
 dist/
+
+# PyCharm generated configuration
+.idea/
