@@ -117,7 +117,7 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     Basic usage then looks like::
         >>> import numpy
-        >>> temp = numpy.loadtxt("flat_triangular_mesh.txt", skiprows=1)
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         >>> vertices = temp[0:121].astype(numpy.float64)
         >>> triangles = temp[121:321].astype(numpy.int32)
         >>> src = numpy.array([1], dtype=numpy.int32)
@@ -210,7 +210,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     Basic usage then looks like::
         >>> import numpy
-        >>> temp = numpy.loadtxt("flat_triangular_mesh.txt", skiprows=1)
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         >>> import gdist
         >>> vertices = temp[0:121].astype(numpy.float64)
         >>> triangles = temp[121:321].astype(numpy.int32)
