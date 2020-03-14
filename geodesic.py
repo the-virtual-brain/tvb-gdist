@@ -74,7 +74,7 @@ class Face(MeshElement):
     def next_edge(edge, vertex):
         raise NotImplemented
 
-    def vertex_angle(vertex):
+    def vertex_angle(self, vertex):
         for v, a in zip(self.adjacent_vertices, self.corner_angles):
             if v == vertex:
                 return a
@@ -181,7 +181,7 @@ class Base(object):
         raise NotImplemented
 
     def stop_distance(self):
-        return max_propagation_distance
+        return self.max_propagation_distance
 
 
 class Dijkstra(Base):
