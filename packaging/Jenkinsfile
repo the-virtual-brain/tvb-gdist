@@ -10,7 +10,7 @@ pipeline {
         stage ('Build docker image') {
             steps {
                 script {
-                    def dockerImage = docker.build("${FULL_DOCKER_IMAGE_NAME}", "--build-arg -f packaging/Dockerfile packaging")
+                    def dockerImage = docker.build("${FULL_DOCKER_IMAGE_NAME}", "-f packaging/Dockerfile packaging")
                     dockerImage.push('${LATEST_TAG}')
                 }
             }
