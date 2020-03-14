@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+cd ..
 rm -Rf dist
 mkdir dist
 
@@ -11,3 +12,4 @@ python setup.py sdist
 python setup.py bdist_wheel
 
 rm -R build
+cd packaging
