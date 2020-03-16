@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'WindowsDocker_Node' }
 
     environment {
         FULL_DOCKER_IMAGE_NAME = 'docker-repository.codemart.ro/tvb-gdist-win'
