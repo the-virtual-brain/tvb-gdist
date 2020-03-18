@@ -13,7 +13,7 @@ Stuart Knock.
 
 
 Original library (published under MIT license):
-http://code.google.com/p/geodesic/
+https://code.google.com/archive/p/geodesic/
 
 We added a python wrapped and made small fixes to the original library, to make it compatible with cython.
 
