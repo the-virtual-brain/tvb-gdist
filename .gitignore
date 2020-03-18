@@ -8,3 +8,9 @@ dist/
 
 # PyCharm generated configuration
 .idea/
+
+# vscode configuration files
+.vscode
+
+# virtual environment
+env
