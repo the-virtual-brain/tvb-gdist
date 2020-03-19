@@ -19,3 +19,6 @@ env
 
 # Executables
 *.out
+
+# Shared object files
+*.so
