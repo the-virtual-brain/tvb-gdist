@@ -2,8 +2,7 @@ pipeline {
     agent { label 'WindowsDocker_Node' }
 
     environment {
-        FULL_DOCKER_IMAGE_NAME = 'docker-repository.codemart.ro/tvb-gdist-win'
-        LATEST_TAG = 'latest'
+        FULL_DOCKER_IMAGE_NAME = 'docker-repository.codemart.ro/tvb-gdist-win:latest'
     }
 
     stages {
@@ -11,28 +10,23 @@ pipeline {
             steps {
                 script {
                     def dockerImage = docker.build("${FULL_DOCKER_IMAGE_NAME}", "-f packaging/Dockerfile-windows packaging")
-                    dockerImage.push('${LATEST_TAG}')
+                    dockerImage.push()
                 }
             }
         }
         stage ('Build for Pypi') {
-            agent {
-                docker {
-                    image '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}'
-                }
-            }
             steps {
-                bat '''
-                    cd packaging
-                    ./package_for_pip.bat
-                '''
+                withDockerContainer(image: "${FULL_DOCKER_IMAGE_NAME}"){
+                    powershell 'cmd /c rmdir /S /Q dist 2>error.txt'
+                    powershell 'cmd /c python setup.py sdist; python setup.py bdist_wheel'
+                }
                 archiveArtifacts artifacts: 'dist/*'
             }
         }
     }
     post {
         changed {
-            mail to: 'lia.domide@codemart.ro',
+            mail to: 'lia.domide@codemart.ro bogdan.valean@codemart.ro',
             subject: "Jenkins Pipeline ${currentBuild.fullDisplayName} changed status",
             body: """
                 Result: ${currentBuild.result}
