@@ -1,3 +1,49 @@
-FROM winamd64/python
+FROM python:3.6.8-windowsservercore as python36
+FROM python:3.7.7-windowsservercore as python37
+FROM python:3.8.2-windowsservercore as python38
 
-RUN pip install nomkl scipy numpy cython pip
+FROM mcr.microsoft.com/dotnet/framework/sdk:4.8-windowsservercore-ltsc2019
+
+COPY --from=python36 /Python /Python36
+COPY --from=python37 /Python /Python37
+COPY --from=python38 /Python /Python38
+
+ENV PYTHON_VERSION 3.7.7
+ENV PYTHON_PIP_VERSION 9.0.1
+
+RUN $env:PATH = 'C:/Python37;C:/Python37/Scripts;{0}' -f $env:PATH ; \
+    Set-ItemProperty -Path 'HKLM:/SYSTEM/CurrentControlSet/Control/Session Manager/Environment/' -Name Path -Value $env:PATH ; \
+    mkdir $env:APPDATA/Python/Python37/site-packages ; \
+    Invoke-WebRequest 'https://bootstrap.pypa.io/get-pip.py' -OutFile 'get-pip.py' -UseBasicParsing ; \
+    $replace = ('import tempfile{0}import site{0}site.getusersitepackages()' -f [char][int]10) ; \
+    Get-Content get-pip.py | Foreach-Object { $_ -replace 'import tempfile', $replace } | Out-File -Encoding Ascii getpip.py ; \
+    $pipInstall = ('pip=={0}' -f $env:PYTHON_PIP_VERSION) ; \
+    python getpip.py $pipInstall ; \
+    Remove-Item get-pip.py ; \
+    Remove-Item getpip.py
+
+RUN pip install --no-cache-dir virtualenv
+
+RUN pip install --no-cache-dir setuptools
+
+ADD https://aka.ms/vs/16/release/vs_buildtools.exe C:\\TEMP\\vs_buildtools.exe
+
+RUN C:\\TEMP\\vs_buildtools.exe --quiet --wait --norestart --nocache \
+    --installPath C:\\BuildTools \
+    --add Microsoft.VisualStudio.Component.VC.CoreIde \
+    --add Microsoft.VisualStudio.Component.VC.Tools.x86.x64 \
+    --add Microsoft.VisualStudio.ComponentGroup.UWP.VC.BuildTools \
+    --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest \
+    --add Microsoft.VisualStudio.Component.Windows10SDK.17763
+
+RUN pip install scipy numpy cython
+
+RUN virtualenv C:\\envs\\p36 -p C:\\Python36\\python.exe
+RUN C:\\envs\\p36\\Scripts\pip.exe install scipy numpy cython
+
+RUN virtualenv C:\\envs\\p38 -p C:\\Python38\\python.exe
+RUN C:\\envs\\p38\\Scripts\pip.exe install scipy numpy cython
+
+# Define the entry point for the docker container.
+# This entry point starts the developer command prompt and launches the PowerShell shell.
+ENTRYPOINT ["C:\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
