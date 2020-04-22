@@ -99,3 +99,6 @@ CHANGE ON 03/02/08
 
 CHANGE ON 2012 (Knock & Gaurav)
 - small fixes to make it compatible with cython
+
+CHANGE IN 2020 (TVB Team)
+-  modernize, make compatible with Python 3
