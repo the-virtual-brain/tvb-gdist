@@ -17,7 +17,8 @@ pipeline {
         stage ('Build tar gz archive') {
             steps {
                 withDockerContainer(image: "${FULL_DOCKER_IMAGE_NAME}"){
-                    powershell 'cmd /c rmdir /S /Q dist 2>error.txt'
+                    powershell 'cmd /c if exist dist rd /s /q dist'
+                    powershell 'cmd /c if exist dist rd /s /q dist'
                     powershell 'cmd /c python setup.py sdist'
                 }
             }
