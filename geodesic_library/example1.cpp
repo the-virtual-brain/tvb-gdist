@@ -14,7 +14,7 @@ int main(int argc, char **argv)
 {
     std::vector<double> points;
     std::vector<unsigned> faces;
-    geodesic::read_mesh_from_file("hedgehog_mesh.txt",points,faces);
+    geodesic::read_mesh_from_file("../data/hedgehog_mesh.txt",points,faces);
 
     geodesic::Mesh mesh;
     mesh.initialize_mesh_data(points, faces);  //create internal mesh data structure including edges
