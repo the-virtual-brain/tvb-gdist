@@ -6,7 +6,7 @@
 # TheVirtualBrain-Scientific Package (for simulators). See content of the
 # documentation-folder for more details. See also http://www.thevirtualbrain.org
 #
-# (c) 2012-2017, Baycrest Centre for Geriatric Care ("Baycrest") and others
+# (c) 2012-2020, Baycrest Centre for Geriatric Care ("Baycrest") and others
 #
 # This program is free software: you can redistribute it and/or modify it under the
 # terms of the GNU General Public License as published by the Free Software Foundation,
@@ -117,7 +117,7 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     Basic usage then looks like::
         >>> import numpy
-        >>> temp = numpy.loadtxt("flat_triangular_mesh.txt", skiprows=1)
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         >>> vertices = temp[0:121].astype(numpy.float64)
         >>> triangles = temp[121:321].astype(numpy.int32)
         >>> src = numpy.array([1], dtype=numpy.int32)
@@ -210,7 +210,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     Basic usage then looks like::
         >>> import numpy
-        >>> temp = numpy.loadtxt("flat_triangular_mesh.txt", skiprows=1)
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         >>> import gdist
         >>> vertices = temp[0:121].astype(numpy.float64)
         >>> triangles = temp[121:321].astype(numpy.int32)
