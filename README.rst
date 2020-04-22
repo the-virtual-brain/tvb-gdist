@@ -1,7 +1,7 @@
 Geodesic Library 
 =================
 
-The `tvb-gdist` module is a Cython interface to a C++ library
+The **tvb-gdist** module is a Cython interface to a C++ library
 (https://code.google.com/archive/p/geodesic/) for computing
 geodesic distance which is the length of shortest line between two
 vertices on a triangulated mesh in three dimensions, such that the line
@@ -17,8 +17,8 @@ https://code.google.com/archive/p/geodesic/
 
 We added a Python wrapped and made small fixes to the original library, to make it compatible with Cython.
 
-To install this, either run `pip install tvb-gdist` or download
-sources from Github and run `python setup.py install` in current folder.
+To install this, either run **pip install tvb-gdist** or download
+sources from Github and run **python setup.py install** in current folder.
 https://github.com/the-virtual-brain/tvb-geodesic
 
 Basic test could be::
