@@ -19,7 +19,6 @@ We added a Python wrapped and made small fixes to the original library, to make 
 
 To install this, either run **pip install tvb-gdist** or download
 sources from Github and run **python setup.py install** in current folder.
-https://github.com/the-virtual-brain/tvb-geodesic
 
 Basic test could be::
 
@@ -44,5 +43,5 @@ and you should find a suitable deb file for your system.
 
 Current Build Status
 =====================
-.. image:: https://travis-ci.com/the-virtual-brain/tvb-geodesic.svg?branch=trunk
-    :target: https://travis-ci.com/the-virtual-brain/tvb-geodesic
+.. image:: https://travis-ci.com/the-virtual-brain/tvb-gdist.svg?branch=trunk
+    :target: https://travis-ci.com/the-virtual-brain/tvb-gdist
