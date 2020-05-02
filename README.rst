@@ -43,5 +43,5 @@ and you should find a suitable deb file for your system.
 
 Current Build Status
 =====================
-.. image:: https://travis-ci.com/the-virtual-brain/tvb-gdist.svg?branch=trunk
-    :target: https://travis-ci.com/the-virtual-brain/tvb-gdist
+.. image:: https://travis-ci.com/the-virtual-brain/tvb-geodesic.svg?branch=trunk
+    :target: https://travis-ci.com/the-virtual-brain/tvb-geodesic
