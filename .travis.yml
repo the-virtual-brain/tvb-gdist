@@ -14,9 +14,6 @@ jobs:
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
-    - name: "Python 2.7 on Xenial Linux"
-      language: python
-      python: 2.7
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell
@@ -25,14 +22,6 @@ jobs:
         - python -m pip install --upgrade pip
         - pip install --user wheel
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
-    - name: "Python 2.7 on Windows"
-      os: windows
-      language: shell
-      env: PATH=/c/Python27:/c/Python27/Scripts:$PATH
-      before_install:
-        - choco install python2 vcredist2008 ; choco install --ignore-dependencies vcpython27
-        - python -m pip install --upgrade pip
-        - pip install --user wheel
     - stage: lint
       language: python
       python: 3.8
