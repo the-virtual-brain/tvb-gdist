@@ -54,7 +54,9 @@ GEODESIC_MODULE = [
         sources=["gdist.pyx"],  # Filename of Cython source
         language="c++",  # Cython create C++ source
         # Disable assertions; one is failing geodesic_mesh.h:405
-        define_macros=[('NDEBUG', 1)]
+        define_macros=[('NDEBUG', 1)],
+        extra_compile_args=['--std=c++14'],
+        extra_link_args=['--std=c++14'],
     )
 ]
 
