@@ -1,0 +1,16 @@
+
+mesh has 300 vertices, 596 faces, 894 edges
+0 edges are boundary edges
+shortest/longest edges are 0.02264/0.619955 = 0.0365189
+enclosing XYZ box: X[-0.989838,1] Y[-0.970617,1] Z[-1,1]
+approximate diameter of the mesh is 3.44134
+min/max face angles are 6.07657/153.724 degrees
+
+number of the points in the path = 7, length of the path = 0.473395
+-0.531449	0.731282	-0.424897
+-0.539285	0.752498	-0.424757
+-0.485868	0.771113	-0.442419
+-0.398777	0.789739	-0.466186
+-0.382855	0.792258	-0.469784
+-0.374716	0.794786	-0.472706
+-0.124904	0.867393	-0.558121

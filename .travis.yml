@@ -11,6 +11,13 @@ script:
 
 jobs:
   include:
+    - name: "C++ Test"
+      language: cpp
+      compiler: gcc
+      install: [] # disable global install
+      script:
+      - sudo chmod +x cpptest.sh
+      - ./cpptest.sh
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
