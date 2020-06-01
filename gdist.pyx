@@ -248,7 +248,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     cdef Py_ssize_t N = vertices.shape[0]
     cdef Py_ssize_t k
     cdef Py_ssize_t kk
-    cdef numpy.float64_t distance
+    cdef numpy.float64_t distance = 0
     
     # Add all vertices as targets
     for k in range(N):
