@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# cython: language_level=3
 #
 #
 # TheVirtualBrain-Framework Package. This package holds all Data Management, and
@@ -31,7 +32,8 @@
 """
 This module defines a Cython wrapper for the geodesic distance C++ library.
 The algorithm (implemented in C++) extends Mitchell, Mount and Papadimitriou 
-(1987) and was written by Danil Kirsanov (http://code.google.com/p/geodesic/)
+(1987) and was written by Danil Kirsanov
+(http://code.google.com/archive/p/geodesic/).
     
 The interface definitions and wrapper functions are written in Cython syntax 
 (http://cython.org/) and provide an API for some of the classes, functions and 
@@ -88,6 +90,27 @@ cdef extern from "geodesic_constants_and_simple_functions.h" namespace "geodesic
 ################################################################################
 
 
+cdef get_mesh(
+    numpy.ndarray[numpy.float64_t, ndim=2] vertices,
+    numpy.ndarray[numpy.int32_t, ndim=2] triangles,
+    Mesh &amesh
+):
+    # Define C++ vectors to contain the mesh surface components.
+    cdef vector[double] points
+    cdef vector[unsigned] faces
+    
+    # Map numpy array of mesh "vertices" to C++ vector of mesh "points" 
+    cdef numpy.float64_t coord
+    for coord in vertices.flatten():
+        points.push_back(coord)
+    
+    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces" 
+    cdef numpy.int32_t indx
+    for indx in triangles.flatten():
+        faces.push_back(indx)
+
+    amesh.initialize_mesh_data(points, faces)
+
 
 def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                   numpy.ndarray[numpy.int32_t, ndim=2] triangles,
@@ -128,23 +151,8 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     """
     
-    # Define C++ vectors to contain the mesh surface components.
-    cdef vector[double] points
-    cdef vector[unsigned] faces
-    
-    # Map numpy array of mesh "vertices" to C++ vector of mesh "points" 
-    cdef numpy.float64_t coord
-    for coord in vertices.flatten():
-        points.push_back(coord)
-    
-    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces" 
-    cdef numpy.int32_t indx
-    for indx in triangles.flatten():
-        faces.push_back(indx)
-
-    # Create a mesh object
     cdef Mesh amesh
-    amesh.initialize_mesh_data(points, faces)
+    get_mesh(vertices, triangles, amesh)
     
     # Define and create object for exact algorithm on that mesh:
     cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
@@ -167,10 +175,11 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         all_sources.push_back(SurfacePoint(&amesh.vertices()[k]))
     
     if target_indices is None:
-        #Propagte purely on max_distance
+        # Propagate purely on max_distance
         algorithm.propagate(all_sources, max_distance, NULL)
-        #Make all vertices targets, NOTE: this is inefficient in the best_source 
-        #                                 step below, but not sure how to avoid.
+        # Make all vertices targets
+        # NOTE: this is inefficient in the best_source step below, but not sure
+        # how to avoid.
         target_indices = numpy.arange(vertices.shape[0], dtype=numpy.int32)
         # Map the NumPy array of targets to a C++ vector
         for k in target_indices:
@@ -179,19 +188,16 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         # Map the NumPy array of targets to a C++ vector
         for k in target_indices:
             stop_points.push_back(SurfacePoint(&amesh.vertices()[k]))
-        #Propogate to the specified targets
+        # Propagate to the specified targets
         algorithm.propagate(all_sources, max_distance, &stop_points)
-    
-    #
+
     distances = numpy.zeros((len(target_indices), ), dtype=numpy.float64)
     for k in range(stop_points.size()):
         algorithm.best_source(stop_points[k], distances[k])
-    
+
     distances[distances==GEODESIC_INF] = numpy.inf
 
     return distances
-
-
 
 
 def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
@@ -229,27 +235,12 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     
     NOTE: The best_source loop could be sped up considerably by restricting 
           targets to those vertices within max_distance of the source, however,
-          this will first require the efficient extraction of this information 
+          this will first require the efficient extraction of this information
           from the propgate step...
     """
     
-    # Define C++ vectors to contain the mesh surface components.
-    cdef vector[double] points
-    cdef vector[unsigned] faces
-    
-    # Map numpy array of mesh "vertices" to C++ vector of mesh "points" 
-    cdef numpy.float64_t coord
-    for coord in vertices.flatten():
-        points.push_back(coord)
-    
-    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces" 
-    cdef numpy.int32_t indx
-    for indx in triangles.flatten():
-        faces.push_back(indx)
-
-    # Create a mesh object
     cdef Mesh amesh
-    amesh.initialize_mesh_data(points, faces)
+    get_mesh(vertices, triangles, amesh)
     
     # Define and create object for exact algorithm on that mesh:
     cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
@@ -258,13 +249,12 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     cdef Py_ssize_t N = vertices.shape[0]
     cdef Py_ssize_t k
     cdef Py_ssize_t kk
-    cdef numpy.float64_t distance
+    cdef numpy.float64_t distance = 0
     
     # Add all vertices as targets
     for k in range(N):
         targets.push_back(SurfacePoint(&amesh.vertices()[k]))
-    
-    #
+
     rows = []
     columns = []
     data = []

@@ -76,7 +76,7 @@ int main(int argc, char **argv)
             geodesic::SurfacePoint p(&mesh.vertices()[i]);
 
             double distance;
-            unsigned best_source = algorithm.best_source(p,distance);    //for a given surface point, find closets source and distance to this source
+            unsigned best_source = algorithm.best_source(p,distance);    //for a given surface point, find closest source and distance to this source
 
             std::cout << distance << " ";    //print geodesic distance for every vertex
         }
