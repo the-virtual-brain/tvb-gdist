@@ -3,6 +3,9 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 
+# pytest cache
+.pytest_cache/
+
 # Distribution / packaging
 dist/
 
@@ -22,6 +25,8 @@ env
 
 # Executables
 *.out
+*.exe
 
 # Shared object files
 *.so
+*.pyd
