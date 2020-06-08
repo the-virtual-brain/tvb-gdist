@@ -5,7 +5,8 @@ pipeline {
         stage ('Run unit-tests') {
             steps {
                 sh '''#!/bin/bash
-                      activate tvb-gdist
+                      source /WORK/anaconda3/anaconda3/etc/profile.d/conda.sh
+                      conda activate tvb-gdist
                       pip install .
                       python setup.py build_ext --inplace
                       pytest --junitxml=results.xml
@@ -17,7 +18,8 @@ pipeline {
         stage ('Build Mac WHL') {
             steps {
                 sh '''#!/bin/bash
-                      activate tvb-gdist
+                      source /WORK/anaconda3/anaconda3/etc/profile.d/conda.sh
+                      conda activate tvb-gdist
                       cd packaging
                       bash package_for_pip.sh
                 '''
