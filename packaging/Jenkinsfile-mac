@@ -5,6 +5,8 @@ pipeline {
         stage ('Run unit-tests') {
             steps {
                 sh '''#!/bin/bash
+                      pip install .
+                      python setup.py build_ext --inplace
                       pytest --junitxml=results.xml
                       exit 0
                 '''

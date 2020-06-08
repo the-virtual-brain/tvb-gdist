@@ -51,7 +51,9 @@ pipeline {
         }
         stage ('Run unit-tests') {
             steps {
-                withDockerContainer(image: "${FULL_DOCKER_IMAGE_NAME}"){
+                withDockerContainer(image: "${FULL_DOCKER_IMAGE_NAME}") {
+                    powershell 'cmd /c pip install .'
+                    powershell 'cmd /c python setup.py build_ext --inplace'
                     powershell 'cmd /c pytest --junitxml=results.xml'
                 }
                 junit 'results.xml'

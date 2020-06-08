@@ -15,20 +15,6 @@ pipeline {
                 }
             }
         }
-        stage ('Run unit-tests') {
-            agent {
-                docker {
-                    image '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}'
-                }
-            }
-            steps {
-                sh '''#!/bin/bash
-                    pytest --junitxml=results.xml
-                    exit 0
-                '''
-                 junit 'results.xml'
-            }
-        }
         stage ('Build for Pypi') {
             agent {
                 docker {
@@ -41,6 +27,22 @@ pipeline {
                     bash package_for_pip.sh
                 '''
                 archiveArtifacts artifacts: 'dist/*'
+            }
+        }
+        stage ('Run unit-tests') {
+            agent {
+                docker {
+                    image '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}'
+                }
+            }
+            steps {
+                sh '''#!/bin/bash
+                    pip install .
+                    python setup.py build_ext --inplace
+                    pytest --junitxml=results.xml
+                    exit 0
+                '''
+                 junit 'results.xml'
             }
         }
     }
