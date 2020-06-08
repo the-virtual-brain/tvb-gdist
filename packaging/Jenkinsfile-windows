@@ -49,7 +49,14 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/*'
             }
         }
-
+        stage ('Run unit-tests') {
+            steps {
+                withDockerContainer(image: "${FULL_DOCKER_IMAGE_NAME}"){
+                    powershell 'cmd /c pytest --junitxml=results.xml'
+                }
+                junit 'results.xml'
+            }
+        }
     }
     post {
         changed {

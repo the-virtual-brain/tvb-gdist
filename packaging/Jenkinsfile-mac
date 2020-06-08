@@ -2,7 +2,16 @@ pipeline {
     agent { label 'TVB_Mac_Node' }
 
     stages {
-        stage ('Build TVB Distribution') {
+        stage ('Run unit-tests') {
+            steps {
+                sh '''#!/bin/bash
+                      pytest --junitxml=results.xml
+                      exit 0
+                '''
+                junit 'results.xml'
+            }
+        }
+        stage ('Build Mac WHL') {
             steps {
                 sh '''#!/bin/bash
                       cd packaging

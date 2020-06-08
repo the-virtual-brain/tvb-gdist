@@ -36,7 +36,7 @@ RUN C:\\TEMP\\vs_buildtools.exe --quiet --wait --norestart --nocache \
     --add Microsoft.VisualStudio.Component.VC.Redist.14.Latest \
     --add Microsoft.VisualStudio.Component.Windows10SDK.17763
 
-RUN pip install scipy numpy cython
+RUN pip install scipy numpy cython pytest
 
 RUN virtualenv C:\\envs\\p36 -p C:\\Python36\\python.exe
 RUN C:\\envs\\p36\\Scripts\pip.exe install scipy numpy cython
