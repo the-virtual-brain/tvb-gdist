@@ -39,13 +39,14 @@ class TestLocalGdistMatrix:
         vertices = data[0:121].astype(np.float64)
         triangles = data[121:].astype(np.int32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
+        epsilon = 1e-6 # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
-        assert (abs(distances - distances.T) > 1e-10).nnz == 0
+        assert (abs(distances - distances.T) > epsilon).nnz == 0
         np.testing.assert_array_almost_equal(distances.toarray()[1][0], 0.2)
         # set max distance as 0.3
         distances = gdist.local_gdist_matrix(vertices, triangles, 0.3)
         # test if the obtained matrix is symmetric
-        assert (abs(distances - distances.T) > 1e-6).nnz == 0
+        assert (abs(distances - distances.T) > epsilon).nnz == 0
         assert np.max(distances) <= 0.3
 
     def test_hedgehog_mesh(self):
@@ -53,13 +54,14 @@ class TestLocalGdistMatrix:
         vertices = data[0:300].astype(np.float64)
         triangles = data[300:].astype(np.int32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
+        epsilon = 1e-6 # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
-        assert (abs(distances - distances.T) > 1e-10).nnz == 0
+        assert (abs(distances - distances.T) > epsilon).nnz == 0
         np.testing.assert_array_almost_equal(
             distances.toarray()[1][0], 1.40522
         )
         # set max distance as 1.45
         distances = gdist.local_gdist_matrix(vertices, triangles, 1.45)
         # test if the obtained matrix is symmetric
-        assert (abs(distances - distances.T) > 1e-6).nnz == 0
+        assert (abs(distances - distances.T) > epsilon).nnz == 0
         assert np.max(distances) <= 1.45
