@@ -266,7 +266,11 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         for kk in range(N): #TODO: Reduce to vertices reached during propagate.
             algorithm.best_source(targets[kk], distance)
             
-            if (distance is not GEODESIC_INF) and (distance is not 0):
+            if (
+                distance is not GEODESIC_INF
+                and distance is not 0
+                and distance <= max_distance
+            ):
                 rows.append(k)
                 columns.append(kk)
                 data.append(distance)
