@@ -4,7 +4,6 @@ pipeline {
     stages {
         stage ('Build TVB Distribution') {
             steps {
-                unstash 'step1'
                 sh '''#!/bin/bash
                       cd packaging
                       bash package_for_pip.sh
