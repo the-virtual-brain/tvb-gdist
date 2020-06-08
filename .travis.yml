@@ -2,8 +2,6 @@ notifications:
   email: false
 
 install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then pip install -r requirements.txt; fi
-  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then pip install --user -r requirements.txt; fi
   - pip install .
 script:
   - pip install pytest~=3.6.1 pytest-cov~=2.4
