@@ -13,10 +13,12 @@ jobs:
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
-    - name: "Python 3.7.4 on macOS"
+    - name: "Python 3.6 on macOS"
       os: osx
-      osx_image: xcode11.2
+      osx_image: xcode9.4
       language: shell
+      env:
+        - TRAVIS_PYTHON_VERSION="3.6"
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell
