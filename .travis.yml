@@ -2,10 +2,10 @@ notifications:
   email: false
 
 install:
-  - pip install .
+  - pip3 install .
   - python setup.py build_ext --inplace
 script:
-  - pip install pytest~=3.6.1
+  - pip3 install pytest~=3.6.1
   - pytest
 
 jobs:
