@@ -8,6 +8,8 @@ __pycache__/
 
 # Distribution / packaging
 dist/
+*.egg-info
+build/
 
 # coverage file
 .coverage
@@ -26,7 +28,10 @@ env
 # Executables
 *.out
 *.exe
+*.o
 
 # Shared object files
 *.so
 *.pyd
+*.dylib
+*.dll
