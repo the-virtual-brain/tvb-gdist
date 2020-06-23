@@ -2,8 +2,8 @@ notifications:
   email: false
 
 install:
-  - pip3 install .
   - python setup.py build_ext --inplace
+  - pip3 install .
 script:
   - pip3 install pytest pytest-cov
   - pytest --cov=gdist
@@ -13,6 +13,8 @@ jobs:
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
+      before_install: pip3 install codecov
+      after_success: codecov
     - name: "Python 3.7.4 on macOS"
       os: osx
       osx_image: xcode11.2
@@ -22,8 +24,9 @@ jobs:
       language: shell
       before_install:
         - choco install python --version 3.8.0
-        - python -m pip install --upgrade pip
+        - python -m pip install -U pip
         - pip install --user wheel
+        - ./create_dll.bat
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
     - name: "Python 3.7.4 on macOS"
       os: osx

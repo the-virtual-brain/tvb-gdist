@@ -42,19 +42,23 @@ To build::
 
 import os
 import shutil
+import sys
 import setuptools
 
 GEODESIC_NAME = "gdist"
 
-GEODESIC_MODULE = [
-    setuptools.Extension(
-        name=GEODESIC_NAME,  # Name of extension
-        sources=["gdist_c_api.cpp"],
-        language="c++",
-        extra_compile_args=['--std=c++11'],
-        extra_link_args=['--std=c++11'],
-    )
-]
+GEODESIC_MODULE = []
+
+if sys.platform == 'darwin' or sys.platform == 'linux':
+    GEODESIC_MODULE = [
+        setuptools.Extension(
+            name=GEODESIC_NAME,  # Name of extension
+            sources=["gdist_c_api.cpp"],
+            language="c++",
+            extra_compile_args=['--std=c++11'],
+            extra_link_args=['--std=c++11'],
+        )
+    ]
 
 INCLUDE_DIRS = [
     # numpy.get_include(),  # NumPy dtypes
@@ -72,6 +76,7 @@ setuptools.setup(
     name="tvb-" + GEODESIC_NAME,
     version='2.0.2',
     scripts=['gdist.py'],
+    py_modules=['gdist'],
     ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
     install_requires=INSTALL_REQUIREMENTS,
