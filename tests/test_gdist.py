@@ -13,8 +13,8 @@ class TestComputeGdist():
         distance = gdist.compute_gdist(
             vertices,
             triangles,
-            source_indices=source,
-            target_indices=target
+            source,
+            target
         )
         np.testing.assert_array_almost_equal(distance, [0.2])
 
@@ -27,8 +27,8 @@ class TestComputeGdist():
         distance = gdist.compute_gdist(
             vertices,
             triangles,
-            source_indices=source,
-            target_indices=target
+            source,
+            target
         )
         np.testing.assert_array_almost_equal(distance, [1.40522])
 

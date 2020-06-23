@@ -1,19 +1,4 @@
-#include <iostream>
-#include <fstream>
-#include <inttypes.h>
-
-#include "geodesic_library/geodesic_algorithm_exact.h"
-
-
-#if defined(_WIN32)
-#  if defined(DLL_EXPORTS)
-#    define DLL_EXPORT_API __declspec(dllexport)
-#  else
-#    define DLL_EXPORT_API __declspec(dllimport)
-#  endif
-#else
-#  define DLL_EXPORT_API
-#endif
+#include "gdist_c_api.h"
 
 
 void compute_gdist_impl(
@@ -108,7 +93,7 @@ double* local_gdist_matrix_impl(
 
 
 extern "C" {
-    DLL_EXPORT_API void compute_gdist(
+    void compute_gdist(
         unsigned number_of_vertices,
         unsigned number_of_triangles,
         double *vertices,
@@ -134,7 +119,7 @@ extern "C" {
         );
     }
 
-    DLL_EXPORT_API double* local_gdist_matrix(
+    double* local_gdist_matrix(
         unsigned number_of_vertices,
         unsigned number_of_triangles,
         double *vertices,
