@@ -39,5 +39,9 @@ if NOT DEFINED VCINSTALLDIR (
     echo "No compatible visual studio found! run vcvarsall.bat first!"
 )
 
-cl.exe /LD /DDLL_EXPORTS /DNDEBUG gdist_c_api.cpp
+mkdir build\lib.win32
+
+cd build\lib.win32
+
+cl.exe /LD /DDLL_EXPORTS /DNDEBUG ..\..\gdist_c_api.cpp
 ls
