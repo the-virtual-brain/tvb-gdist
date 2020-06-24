@@ -11,7 +11,8 @@ void compute_gdist_impl(
     unsigned *source_indices_array,
     unsigned *target_indices_array,
     double *distance,
-    double distance_limit
+    double distance_limit,
+    unsigned is_one_indexed
 ) {
 
     std::vector<double> points (vertices, vertices + number_of_vertices);
@@ -20,7 +21,7 @@ void compute_gdist_impl(
     std::vector<unsigned> target_indices (target_indices_array, target_indices_array + number_of_target_indices);
 
     geodesic::Mesh mesh;
-    mesh.initialize_mesh_data(points, faces); // create internal mesh data structure including edges
+    mesh.initialize_mesh_data(points, faces, is_one_indexed); // create internal mesh data structure including edges
 
     geodesic::GeodesicAlgorithmExact algorithm(&mesh); // create exact algorithm for the mesh
     
@@ -47,13 +48,14 @@ double* local_gdist_matrix_impl(
     double *vertices,
     unsigned *triangles,
     unsigned *sparse_matrix_size,
-    double max_distance
+    double max_distance,
+    unsigned is_one_indexed
 ) {
     std::vector<double> points (vertices, vertices + number_of_vertices);
     std::vector<unsigned> faces (triangles, triangles + number_of_triangles);
     
     geodesic::Mesh mesh;
-    mesh.initialize_mesh_data(points, faces); // create internal mesh data structure including edges
+    mesh.initialize_mesh_data(points, faces, is_one_indexed); // create internal mesh data structure including edges
     geodesic::GeodesicAlgorithmExact algorithm(&mesh); // create exact algorithm for the mesh
     std::vector <unsigned> rows_vector, columns_vector;
     std::vector <double> data_vector;
@@ -108,7 +110,8 @@ extern "C" {
         unsigned *source_indices_array,
         unsigned *target_indices_array,
         double *distance,
-        double distance_limit
+        double distance_limit,
+        unsigned is_one_indexed
     ) {
         compute_gdist_impl(
             number_of_vertices,
@@ -120,7 +123,8 @@ extern "C" {
             source_indices_array,
             target_indices_array,
             distance,
-            distance_limit
+            distance_limit,
+            is_one_indexed
         );
     }
 
@@ -130,7 +134,8 @@ extern "C" {
         double *vertices,
         unsigned *triangles,
         unsigned *sparse_matrix_size,
-        double max_distance
+        double max_distance,
+        unsigned is_one_indexed
     ) {
         return local_gdist_matrix_impl(
             number_of_vertices,
@@ -138,7 +143,8 @@ extern "C" {
             vertices,
             triangles,
             sparse_matrix_size,
-            max_distance
+            max_distance,
+            is_one_indexed
         );
     }
 

@@ -32,6 +32,7 @@ lib.compute_gdist.argtypes = [
     np.ctypeslib.ndpointer(dtype=np.int32),
     np.ctypeslib.ndpointer(dtype=np.float64),
     ctypes.c_double,
+    ctypes.c_uint,
 ]
 lib.compute_gdist.restype = None
 
@@ -42,6 +43,7 @@ lib.local_gdist_matrix.argtypes = [
     np.ctypeslib.ndpointer(dtype=np.int32),
     ctypes.POINTER(ctypes.c_uint),
     ctypes.c_double,
+    ctypes.c_uint,
 ]
 lib.local_gdist_matrix.restype = ctypes.POINTER(ctypes.c_double)
 
@@ -63,6 +65,7 @@ class Gdist(object):
         source_indices_array,
         target_indices_array,
         distance_limit,
+        is_one_indexed,
     ):
         target_indices_size = target_indices_array.size
         distance = np.empty(target_indices_size, dtype=np.float64)
@@ -77,6 +80,7 @@ class Gdist(object):
             target_indices_array,
             distance,
             distance_limit,
+            is_one_indexed,
         )
         return distance
 
@@ -87,6 +91,7 @@ class Gdist(object):
         vertices,
         triangles,
         max_distance,
+        is_one_indexed,
     ):
         sparse_matrix_size = ctypes.c_uint(0)
         data = lib.local_gdist_matrix(
@@ -96,6 +101,7 @@ class Gdist(object):
             triangles,
             ctypes.byref(sparse_matrix_size),
             max_distance,
+            is_one_indexed,
         )
 
         np_data = np.fromiter(
@@ -113,6 +119,7 @@ def compute_gdist(
     source_indices=None,
     target_indices=None,
     max_distance=1e100,
+    is_one_indexed=False,
 ):
     vertices = vertices.ravel()
     triangles = triangles.ravel()
@@ -130,6 +137,7 @@ def compute_gdist(
         source_indices_array=source_indices,
         target_indices_array=target_indices,
         distance_limit=max_distance,
+        is_one_indexed=int(is_one_indexed),
     )
     return np.fromiter(distance, dtype=np.float64, count=target_indices.size)
 
@@ -138,17 +146,19 @@ def local_gdist_matrix(
     vertices,
     triangles,
     max_distance=1e100,
+    is_one_indexed=False,
 ):
     vertices = vertices.ravel()
     triangles = triangles.ravel()
 
     g = Gdist()
     data = g.local_gdist_matrix(
-        vertices.size,
-        triangles.size,
-        vertices,
-        triangles,
-        max_distance,
+        number_of_vertices=vertices.size,
+        number_of_triangles=triangles.size,
+        vertices=vertices,
+        triangles=triangles,
+        max_distance=max_distance,
+        is_one_indexed=is_one_indexed,
     )
     sizes = data.size // 3
     rows = data[:sizes]

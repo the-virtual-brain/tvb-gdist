@@ -26,7 +26,8 @@ void compute_gdist_impl(
     unsigned *source_indices_array,
     unsigned *target_indices_array,
     double *distance,
-    double distance_limit
+    double distance_limit,
+    unsigned is_one_indexed
 );
 
 double* local_gdist_matrix_impl(
@@ -35,7 +36,8 @@ double* local_gdist_matrix_impl(
     double *vertices,
     unsigned *triangles,
     unsigned *sparse_matrix_size,
-    double max_distance
+    double max_distance,
+    unsigned is_one_indexed
 );
 
 void free_memory_impl(double *ptr);
@@ -51,7 +53,8 @@ extern "C" {
         unsigned *source_indices_array,
         unsigned *target_indices_array,
         double *distance,
-        double distance_limit
+        double distance_limit,
+        unsigned is_one_indexed
     );
 
     DLL_EXPORT_API double* local_gdist_matrix(
@@ -60,7 +63,8 @@ extern "C" {
         double *vertices,
         unsigned *triangles,
         unsigned *sparse_matrix_size,
-        double max_distance
+        double max_distance,
+        unsigned is_one_indexed
     );
 
     DLL_EXPORT_API void free_memory(double *ptr);
