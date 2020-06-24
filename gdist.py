@@ -62,7 +62,7 @@ class Gdist(object):
         number_of_target_indices,
         source_indices_array,
         target_indices_array,
-        distance_limit
+        distance_limit,
     ):
         target_indices_size = target_indices_array.size
         distance = np.empty(target_indices_size, dtype=np.float64)
@@ -76,7 +76,7 @@ class Gdist(object):
             source_indices_array,
             target_indices_array,
             distance,
-            distance_limit
+            distance_limit,
         )
         return distance
 
@@ -95,11 +95,14 @@ class Gdist(object):
             vertices,
             triangles,
             ctypes.byref(sparse_matrix_size),
-            max_distance
+            max_distance,
         )
 
-        np_data = np.fromiter(data, dtype=np.float64,
-                           count=3 * sparse_matrix_size.value)
+        np_data = np.fromiter(
+            data,
+            dtype=np.float64,
+            count=3 * sparse_matrix_size.value,
+        )
         lib.free_memory(data)
         return np_data
 
@@ -126,7 +129,7 @@ def compute_gdist(
         number_of_target_indices=target_indices.size,
         source_indices_array=source_indices,
         target_indices_array=target_indices,
-        distance_limit=max_distance
+        distance_limit=max_distance,
     )
     return np.fromiter(distance, dtype=np.float64, count=target_indices.size)
 
@@ -134,7 +137,7 @@ def compute_gdist(
 def local_gdist_matrix(
     vertices,
     triangles,
-    max_distance=1e100
+    max_distance=1e100,
 ):
     vertices = vertices.ravel()
     triangles = triangles.ravel()
@@ -145,12 +148,12 @@ def local_gdist_matrix(
         triangles.size,
         vertices,
         triangles,
-        max_distance
+        max_distance,
     )
     sizes = data.size // 3
     rows = data[:sizes]
-    columns = data[sizes: 2*sizes]
-    data = data[2*sizes:]
+    columns = data[sizes: 2 * sizes]
+    data = data[2 * sizes:]
 
     return scipy.sparse.csc_matrix(
         (data, (rows, columns)), shape=(vertices.size // 3, vertices.size // 3)
