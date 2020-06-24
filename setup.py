@@ -41,7 +41,6 @@ To build::
 """
 
 import os
-import shutil
 import sys
 import setuptools
 
@@ -61,7 +60,6 @@ if sys.platform == 'darwin' or sys.platform == 'linux':
     ]
 
 INCLUDE_DIRS = [
-    # numpy.get_include(),  # NumPy dtypes
     "geodesic_library",  # geodesic distance, C++ library.
 ]
 
