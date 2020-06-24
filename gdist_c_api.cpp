@@ -92,6 +92,11 @@ double* local_gdist_matrix_impl(
 }
 
 
+void free_memory_impl(double *ptr) {
+    delete[] ptr;
+}
+
+
 extern "C" {
     void compute_gdist(
         unsigned number_of_vertices,
@@ -135,5 +140,9 @@ extern "C" {
             sparse_matrix_size,
             max_distance
         );
+    }
+
+    void free_memory(double *ptr) {
+        free_memory_impl(ptr);
     }
 };

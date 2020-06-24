@@ -33,7 +33,6 @@ lib.compute_gdist.argtypes = [
     np.ctypeslib.ndpointer(dtype=np.float64),
     ctypes.c_double,
 ]
-
 lib.compute_gdist.restype = None
 
 lib.local_gdist_matrix.argtypes = [
@@ -45,6 +44,11 @@ lib.local_gdist_matrix.argtypes = [
     ctypes.c_double,
 ]
 lib.local_gdist_matrix.restype = ctypes.POINTER(ctypes.c_double)
+
+lib.free_memory.argtypes = [
+    ctypes.POINTER(ctypes.c_double),
+]
+lib.free_memory.restype = None
 
 
 class Gdist(object):
@@ -94,9 +98,10 @@ class Gdist(object):
             max_distance
         )
 
-        data = np.fromiter(data, dtype=np.float64,
+        np_data = np.fromiter(data, dtype=np.float64,
                            count=3 * sparse_matrix_size.value)
-        return data
+        lib.free_memory(data)
+        return np_data
 
 
 def compute_gdist(
