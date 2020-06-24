@@ -38,6 +38,8 @@ double* local_gdist_matrix_impl(
     double max_distance
 );
 
+void free_memory_impl(double *ptr);
+
 extern "C" {
     DLL_EXPORT_API void compute_gdist(
         unsigned number_of_vertices,
@@ -60,4 +62,6 @@ extern "C" {
         unsigned *sparse_matrix_size,
         double max_distance
     );
+
+    DLL_EXPORT_API void free_memory(double *ptr);
 };
