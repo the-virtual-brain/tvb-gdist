@@ -8,8 +8,7 @@ import scipy.sparse
 
 
 if sys.platform == 'win32':
-    libfile = glob.glob('build/*/gdist_c_api.dll')[0]
-    libfile = os.path.abspath(libfile)
+    libfile = os.path.abspath('build/lib.win32/gdist_c_api.dll')
     lib = ctypes.windll.LoadLibrary(libfile)
 elif sys.platform == 'darwin':
     try:

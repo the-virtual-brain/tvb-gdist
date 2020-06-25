@@ -34,7 +34,7 @@ class TestComputeGdist():
             target,
             is_one_indexed=True,
         )
-        np.testing.assert_array_almost_equal(distance, [0])
+        np.testing.assert_array_almost_equal(distance, [0.2])
 
     def test_hedgehog_mesh(self):
         data = np.loadtxt("data/hedgehog_mesh.txt", skiprows=1)
@@ -84,7 +84,7 @@ class TestLocalGdistMatrix:
         assert (abs(distances - distances.T) > epsilon).nnz == 0
         np.testing.assert_array_almost_equal(distances.toarray()[1][0], 0.2)
         # set max distance as 0.3
-        distances = gdist.local_gdist_matrix(vertices, triangles, 0.3)
+        distances = gdist.local_gdist_matrix(vertices, triangles, 0.3, True)
         # test if the obtained matrix is symmetric
         assert (abs(distances - distances.T) > epsilon).nnz == 0
         assert np.max(distances) <= 0.3
