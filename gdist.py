@@ -150,6 +150,7 @@ def local_gdist_matrix(
         triangles,
         max_distance,
     )
+    assert data.size % 3 == 0
     sizes = data.size // 3
     rows = data[:sizes]
     columns = data[sizes: 2 * sizes]

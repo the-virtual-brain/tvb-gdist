@@ -2,23 +2,28 @@ notifications:
   email: false
 
 install:
-  - python setup.py build_ext --inplace
   - pip3 install .
 script:
-  - pip3 install pytest pytest-cov
-  - pytest --cov=gdist
+  - pip3 install nose2 nose2-cov
+  - nose2 --with-coverage
 
 jobs:
   include:
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
-      before_install: pip3 install codecov
+      before_install:
+        - pip3 install codecov
+        - sudo chmod +x linux_so.sh
+        - ./linux_so.sh
       after_success: codecov
     - name: "Python 3.7.4 on macOS"
       os: osx
       osx_image: xcode11.2
       language: shell
+      before_install:
+        - chmod 755 macos_dylib.sh
+        - ./macos_dylib.sh
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell

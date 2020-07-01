@@ -81,7 +81,7 @@ double* local_gdist_matrix_impl(
 
     double *data;
     data = new double[3 * rows_vector.size()];
-
+    assert (data != NULL); // memory allocation should not fail
     *sparse_matrix_size = rows_vector.size();
 
     std::copy(rows_vector.begin(), rows_vector.end(), data);

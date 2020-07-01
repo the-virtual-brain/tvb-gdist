@@ -2,7 +2,7 @@
 #include <fstream>
 #include <inttypes.h>
 
-#include "geodesic_library/geodesic_algorithm_exact.h"
+#include "geodesic_algorithm_exact.h"
 
 
 #if defined(_WIN32)

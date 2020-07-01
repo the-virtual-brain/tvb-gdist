@@ -52,8 +52,8 @@ if sys.platform == 'darwin' or sys.platform == 'linux':
     GEODESIC_MODULE = [
         setuptools.Extension(
             name=GEODESIC_NAME,  # Name of extension
-            sources=["gdist_c_api.cpp"],
-            language="c++",
+            sources=['geodesic_library/gdist_c_api.cpp'],
+            language='c++',
             extra_compile_args=['--std=c++11'],
             extra_link_args=['--std=c++11'],
         )
@@ -75,7 +75,7 @@ setuptools.setup(
     version='2.0.2',
     scripts=['gdist.py'],
     py_modules=['gdist'],
-    ext_modules=GEODESIC_MODULE,
+    # ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
     install_requires=INSTALL_REQUIREMENTS,
     description="Compute geodesic distances",
