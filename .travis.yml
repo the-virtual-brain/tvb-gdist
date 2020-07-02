@@ -3,16 +3,20 @@ notifications:
 
 install:
   - pip3 install .
-  # - python setup.py build_ext --inplace
+  - python setup.py build_ext --inplace
 script:
-  - pip3 install pytest~=3.6.1
-  - pytest
+  - pip3 install pytest pytest-cov
+  - pytest --cov=gdist
 
 jobs:
   include:
     - name: "Python 3.8 on Xenial Linux"
       language: python
       python: 3.8
+    - name: "Python 3.7.4 on macOS"
+      os: osx
+      osx_image: xcode11.2
+      language: shell
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell
