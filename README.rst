@@ -28,18 +28,6 @@ Basic test could be::
 
 Python 3, Cython, and a C++ compiler are required unless the Pypi whl files are compatible with your system.
 
-Debian package
---------------
-
-In order to produce a Debian package, assuming you have the requisite tools
-installed (`apt-get install devscripts python-all-dev python-stdeb`)::
-
-    cd debian
-    debuild -us -uc
-    cd ../../
-
-
-and you should find a suitable deb file for your system.
 
 Current Build Status
 =====================
