@@ -57,7 +57,7 @@ GEODESIC_MODULE = [
         define_macros=[('NDEBUG', 1)],
         extra_compile_args=['--std=c++14'],
         extra_link_args=['--std=c++14'],
-        include_dirs=[numpy.get_include()],
+        include_dirs=[numpy.get_include(), "geodesic_library"],
     )
 ]
 
