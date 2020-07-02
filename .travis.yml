@@ -33,10 +33,6 @@ jobs:
         - pip install --user wheel
         - ./create_dll.bat
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
-    - name: "Python 3.7.4 on macOS"
-      os: osx
-      osx_image: xcode11.2
-      language: shell
     - stage: lint
       language: python
       python: 3.8
