@@ -4,8 +4,8 @@ notifications:
 install:
   - pip3 install .
 script:
-  - pip3 install pytest pytest-cov
-  - pytest --cov=gdist
+  - pip3 install nose2 nose2-cov
+  - nose2 --with-coverage
 
 jobs:
   include:
