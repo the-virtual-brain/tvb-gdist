@@ -7,9 +7,9 @@ class TestComputeGdist():
     def test_flat_triangular_mesh(self):
         data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         vertices = data[0:121].astype(np.float64)
-        triangles = data[121:].astype(np.int32)
-        source = np.array([1], dtype=np.int32)
-        target = np.array([2], dtype=np.int32)
+        triangles = data[121:].astype(np.uint32)
+        source = np.array([1], dtype=np.uint32)
+        target = np.array([2], dtype=np.uint32)
         distance = gdist.compute_gdist(
             vertices,
             triangles,
@@ -21,9 +21,9 @@ class TestComputeGdist():
     def test_hedgehog_mesh(self):
         data = np.loadtxt("data/hedgehog_mesh.txt", skiprows=1)
         vertices = data[0:300].astype(np.float64)
-        triangles = data[300:].astype(np.int32)
-        source = np.array([0], dtype=np.int32)
-        target = np.array([1], dtype=np.int32)
+        triangles = data[300:].astype(np.uint32)
+        source = np.array([0], dtype=np.uint32)
+        target = np.array([1], dtype=np.uint32)
         distance = gdist.compute_gdist(
             vertices,
             triangles,
@@ -37,7 +37,7 @@ class TestLocalGdistMatrix:
     def test_flat_triangular_mesh(self):
         data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         vertices = data[0:121].astype(np.float64)
-        triangles = data[121:].astype(np.int32)
+        triangles = data[121:].astype(np.uint32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
         epsilon = 1e-6  # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
@@ -52,7 +52,7 @@ class TestLocalGdistMatrix:
     def test_hedgehog_mesh(self):
         data = np.loadtxt("data/hedgehog_mesh.txt", skiprows=1)
         vertices = data[0:300].astype(np.float64)
-        triangles = data[300:].astype(np.int32)
+        triangles = data[300:].astype(np.uint32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
         epsilon = 1e-6  # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric

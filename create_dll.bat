@@ -43,5 +43,5 @@ mkdir build\lib.win32
 
 cd build\lib.win32
 
-cl.exe /LD /DDLL_EXPORTS ..\..\geodesic_library\gdist_c_api.cpp
+cl.exe /LD /DDLL_EXPORTS /EHsc ..\..\geodesic_library\gdist_c_api.cpp
 ls

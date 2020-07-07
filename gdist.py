@@ -10,26 +10,26 @@ import scipy.sparse
 if sys.platform == 'win32':
     libfile = glob.glob('build/*/gdist_c_api.dll')[0]
     libfile = os.path.abspath(libfile)
-    lib = ctypes.windll.LoadLibrary(libfile)
+    lib = ctypes.CDLL(libfile)
 elif sys.platform == 'darwin':
     try:
         libfile = glob.glob('build/*/gdist*.so')[0]
     except IndexError:
         libfile = glob.glob('build/*/gdist*.dylib')[0]
-    lib = ctypes.cdll.LoadLibrary(libfile)
+    lib = ctypes.CDLL(libfile)
 else:
     libfile = glob.glob('build/*/gdist*.so')[0]
-    lib = ctypes.cdll.LoadLibrary(libfile)
+    lib = ctypes.CDLL(libfile)
 
 lib.compute_gdist.argtypes = [
     ctypes.c_uint,
     ctypes.c_uint,
     np.ctypeslib.ndpointer(dtype=np.float64),
-    np.ctypeslib.ndpointer(dtype=np.int32),
+    np.ctypeslib.ndpointer(dtype=np.uint32),
     ctypes.c_uint,
     ctypes.c_uint,
-    np.ctypeslib.ndpointer(dtype=np.int32),
-    np.ctypeslib.ndpointer(dtype=np.int32),
+    np.ctypeslib.ndpointer(dtype=np.uint32),
+    np.ctypeslib.ndpointer(dtype=np.uint32),
     np.ctypeslib.ndpointer(dtype=np.float64),
     ctypes.c_double,
 ]
@@ -39,7 +39,7 @@ lib.local_gdist_matrix.argtypes = [
     ctypes.c_uint,
     ctypes.c_uint,
     np.ctypeslib.ndpointer(dtype=np.float64),
-    np.ctypeslib.ndpointer(dtype=np.int32),
+    np.ctypeslib.ndpointer(dtype=np.uint32),
     ctypes.POINTER(ctypes.c_uint),
     ctypes.c_double,
 ]
