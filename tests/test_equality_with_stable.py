@@ -13,7 +13,7 @@ def test_equality_with_stable():
             dtype=np.float64,
         )
         triangles = np.loadtxt(
-            f'data/{surface_data}/triangles.txt',
+            f'data/surface_data/{surface_data}/triangles.txt',
             dtype=np.int32,
         )
         actual = gdist.local_gdist_matrix(
