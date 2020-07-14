@@ -3,3 +3,5 @@ include README.rst
 include gdist.pyx
 include setup.py
 include LICENSE
+exclude tests/test_equality_with_stable.py
+exclude data/surface_data/*

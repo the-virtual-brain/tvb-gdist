@@ -6,9 +6,10 @@ import gdist
 def test_equality_with_stable():
     surface_datas = ['inner_skull_642', 'outer_skull_642', 'scalp_1082']
     for surface_data in surface_datas:
-        expected = np.loadtxt(f'data/{surface_data}/gdist_matrix.txt')
+        expected = np.loadtxt(
+            f'data/surface_data/{surface_data}/gdist_matrix.txt')
         vertices = np.loadtxt(
-            f'data/{surface_data}/vertices.txt',
+            f'data/surface_data/{surface_data}/vertices.txt',
             dtype=np.float64,
         )
         triangles = np.loadtxt(
