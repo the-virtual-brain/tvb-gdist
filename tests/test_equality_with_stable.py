@@ -14,7 +14,7 @@ def test_equality_with_stable():
         )
         triangles = np.loadtxt(
             f'data/surface_data/{surface_data}/triangles.txt',
-            dtype=np.int32,
+            dtype=np.uint32,
         )
         actual = gdist.local_gdist_matrix(
             vertices=vertices,
