@@ -55,7 +55,8 @@ cimport numpy
 # For csc_matrix returned by local_gdist_matrix()
 import scipy.sparse
 
-# Pre-cdef'd containers from the C++ standard library   
+# Pre-cdef'd containers from the C++ standard library
+from libcpp cimport bool
 from libcpp.vector cimport vector
 
 ################################################################################
@@ -76,7 +77,7 @@ cdef extern from "geodesic_mesh_elements.h" namespace "geodesic":
 cdef extern from "geodesic_mesh.h" namespace "geodesic":
     cdef cppclass Mesh:
         Mesh()
-        void initialize_mesh_data(vector[double]&, vector[unsigned]&)
+        void initialize_mesh_data(vector[double]&, vector[unsigned]&, bool)
         vector[Vertex]& vertices()
 
 cdef extern from "geodesic_algorithm_exact.h" namespace "geodesic":
@@ -93,7 +94,8 @@ cdef extern from "geodesic_constants_and_simple_functions.h" namespace "geodesic
 cdef get_mesh(
     numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     numpy.ndarray[numpy.int32_t, ndim=2] triangles,
-    Mesh &amesh
+    Mesh &amesh,
+    bool is_one_indexed
 ):
     # Define C++ vectors to contain the mesh surface components.
     cdef vector[double] points
@@ -109,14 +111,15 @@ cdef get_mesh(
     for indx in triangles.flatten():
         faces.push_back(indx)
 
-    amesh.initialize_mesh_data(points, faces)
+    amesh.initialize_mesh_data(points, faces, is_one_indexed)
 
 
 def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                   numpy.ndarray[numpy.int32_t, ndim=2] triangles,
                   numpy.ndarray[numpy.int32_t, ndim=1] source_indices = None,
                   numpy.ndarray[numpy.int32_t, ndim=1] target_indices = None,
-                  double max_distance = GEODESIC_INF):
+                  double max_distance = GEODESIC_INF,
+                  bool is_one_indexed = False):
     """
     This is the wrapper function for computing geodesic distance between a set 
     of sources and targets on a mesh surface. This function accepts five 
@@ -125,7 +128,9 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         ``triangles``: defines faces of the mesh as index triplets into vertices.
         ``source_indices``: Index of the source on the mesh.
         ``target_indices``: Index of the targets on the mesh.
-        ``max_distance``: 
+        ``max_distance``:
+        ``is_one_indexed``: defines if the index of the triangles data is one-
+        indexed
     and returns a numpy.ndarray((len(target_indices), ), dtype=numpy.float64) 
     specifying the shortest distance to the target vertices from the nearest 
     source vertex on the mesh. If no target_indices are provided, all vertices 
@@ -152,7 +157,7 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     """
     
     cdef Mesh amesh
-    get_mesh(vertices, triangles, amesh)
+    get_mesh(vertices, triangles, amesh, is_one_indexed)
     
     # Define and create object for exact algorithm on that mesh:
     cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
@@ -202,14 +207,17 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
 
 def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                        numpy.ndarray[numpy.int32_t, ndim=2] triangles,
-                       double max_distance = GEODESIC_INF):
+                       double max_distance = GEODESIC_INF,
+                       bool is_one_indexed = False):
     """
     This is the wrapper function for computing geodesic distance from every 
     vertex on the surface to all those within a distance ``max_distance`` of 
     them. The function accepts three arguments:
         ``vertices``: defines x,y,z coordinates of the mesh's vertices
         ``triangles``: defines faces of the mesh as index triplets into vertices.
-        ``max_distance``: 
+        ``max_distance``:
+        ``is_one_indexed``: defines if the index of the triangles data is one-
+        indexed
     and returns a scipy.sparse.csc_matrix((N, N), dtype=numpy.float64), where N
     is the number of vertices, specifying the shortest distance from all 
     vertices to all the vertices within max_distance.
@@ -240,7 +248,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     """
     
     cdef Mesh amesh
-    get_mesh(vertices, triangles, amesh)
+    get_mesh(vertices, triangles, amesh, is_one_indexed)
     
     # Define and create object for exact algorithm on that mesh:
     cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
