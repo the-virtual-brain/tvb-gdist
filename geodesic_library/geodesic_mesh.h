@@ -34,10 +34,11 @@ public:
     void initialize_mesh_data(unsigned num_vertices,
                               Points& p, 
                               unsigned num_faces,
-                              Faces& tri);    //build mesh from regular point-triangle representation
+                              Faces& tri,
+                              bool is_one_indexed=false);    //build mesh from regular point-triangle representation
 
     template<class Points, class Faces>
-    void initialize_mesh_data(Points& p, Faces& tri);    //build mesh from regular point-triangle representation
+    void initialize_mesh_data(Points& p, Faces& tri, bool is_one_indexed=false);    //build mesh from regular point-triangle representation
 
     std::vector<Vertex>& vertices(){return m_vertices;};
     std::vector<Edge>& edges(){return m_edges;};
@@ -111,21 +112,22 @@ inline unsigned Mesh::closest_vertices(SurfacePoint* p,
 }
 
 template<class Points, class Faces>
-void Mesh::initialize_mesh_data(Points& p, Faces& tri)    //build mesh from regular point-triangle representation
+void Mesh::initialize_mesh_data(Points& p, Faces& tri, bool is_one_indexed)    //build mesh from regular point-triangle representation
 {
     assert(p.size() % 3 == 0);
     unsigned const num_vertices = p.size() / 3;
     assert(tri.size() % 3 == 0);
     unsigned const num_faces = tri.size() / 3; 
 
-    initialize_mesh_data(num_vertices, p, num_faces, tri);
+    initialize_mesh_data(num_vertices, p, num_faces, tri, is_one_indexed);
 }
 
 template<class Points, class Faces>
 void Mesh::initialize_mesh_data(unsigned num_vertices,
                                 Points& p,
                                 unsigned num_faces,
-                                Faces& tri)
+                                Faces& tri,
+                                bool is_one_indexed)
 {
     unsigned const approximate_number_of_internal_pointers = (num_vertices + num_faces)*4;
     unsigned const max_number_of_pointer_blocks = 100; 
@@ -154,7 +156,7 @@ void Mesh::initialize_mesh_data(unsigned num_vertices,
         unsigned shift = 3*i;
         for(unsigned j=0; j<3; ++j)
         {
-            unsigned vertex_index = tri[shift + j];
+            unsigned vertex_index = tri[shift + j] - (unsigned)is_one_indexed;
             assert(vertex_index < num_vertices);
             f.adjacent_vertices()[j] = &m_vertices[vertex_index];
         }
