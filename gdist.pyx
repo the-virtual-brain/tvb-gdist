@@ -80,6 +80,9 @@ cdef extern from "geodesic_mesh.h" namespace "geodesic":
         void initialize_mesh_data(vector[double]&, vector[unsigned]&, bool)
         vector[Vertex]& vertices()
 
+cdef extern from "geodesic_utils.h":
+    vector[double] compute_gdist_impl(vector[double], vector[unsigned], vector[unsigned], vector[unsigned], double, bool, bool)
+
 cdef extern from "geodesic_algorithm_exact.h" namespace "geodesic":
     cdef cppclass GeodesicAlgorithmExact:
         GeodesicAlgorithmExact(Mesh*)
@@ -143,7 +146,7 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         vertex on the mesh. If no target_indices are provided, all vertices of
         the mesh are considered as targets, however, in this case, specifying
         max_distance will limit the targets to those vertices within
-        max_distance of a source.
+        max_distance of a source. If no source_indices are provided, it defaults to 0.
     
     NOTE: This is the function to use when specifying localised stimuli and
     parameter variations. For efficiently using the whole mesh as sources, such
@@ -162,52 +165,33 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
          array([0.2])
     """
     
-    cdef Mesh amesh
-    get_mesh(vertices, triangles, amesh, is_one_indexed)
-    
-    # Define and create object for exact algorithm on that mesh:
-    cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
-    
-    # Define a C++ vector for the source vertices
-    cdef vector[SurfacePoint] all_sources
-    
-    # Define a C++ vector for the target vertices
-    cdef vector[SurfacePoint] stop_points
-    
-    # Define a NumPy array to hold the results
-    cdef numpy.ndarray[numpy.float64_t, ndim=1] distances
+    cdef bool propagate_on_max_distance = False
+    cdef vector[double] points
+    cdef vector[unsigned] faces
 
-    cdef Py_ssize_t  k
-    
-    if source_indices is None: #Default to 0
-        source_indices = numpy.arange(0, dtype=numpy.int32)
-    # Map the NumPy sources of targets to a C++ vector
-    for k in source_indices:
-        all_sources.push_back(SurfacePoint(&amesh.vertices()[k]))
-    
+    if source_indices is None:
+        source_indices = numpy.arange(0, dtype=numpy.int32)  # default to 0
     if target_indices is None:
-        # Propagate purely on max_distance
-        algorithm.propagate(all_sources, max_distance, NULL)
-        # Make all vertices targets
-        # NOTE: this is inefficient in the best_source step below, but not sure
-        # how to avoid.
-        target_indices = numpy.arange(vertices.shape[0], dtype=numpy.int32)
-        # Map the NumPy array of targets to a C++ vector
-        for k in target_indices:
-            stop_points.push_back(SurfacePoint(&amesh.vertices()[k]))
-    else:
-        # Map the NumPy array of targets to a C++ vector
-        for k in target_indices:
-            stop_points.push_back(SurfacePoint(&amesh.vertices()[k]))
-        # Propagate to the specified targets
-        algorithm.propagate(all_sources, max_distance, &stop_points)
+        propagate_on_max_distance = True
+        target_indices = numpy.arange(vertices.size(), dtype=numpy.int32)
 
-    distances = numpy.zeros((len(target_indices), ), dtype=numpy.float64)
-    for k in range(stop_points.size()):
-        algorithm.best_source(stop_points[k], distances[k])
+    for k in vertices.flatten():
+        points.push_back(k)
+    for k in triangles.flatten():
+        faces.push_back(k)
 
-    distances[distances==GEODESIC_INF] = numpy.inf
-
+    distances = compute_gdist_impl(
+        points,
+        faces,
+        source_indices,
+        target_indices,
+        max_distance,
+        is_one_indexed,
+        propagate_on_max_distance,
+    )
+    # TODO: Basically copies, can be improved as memory is contiguous.
+    distances = numpy.asarray(distances)
+    distances[distances==max_distance] = numpy.inf
     return distances
 
 
