@@ -100,12 +100,12 @@ cdef get_mesh(
     # Define C++ vectors to contain the mesh surface components.
     cdef vector[double] points
     cdef vector[unsigned] faces
-    
+
     # Map numpy array of mesh "vertices" to C++ vector of mesh "points" 
     cdef numpy.float64_t coord
     for coord in vertices.flatten():
         points.push_back(coord)
-    
+
     # Map numpy array of mesh "triangles" to C++ vector of mesh "faces" 
     cdef numpy.int32_t indx
     for indx in triangles.flatten():
@@ -120,23 +120,30 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                   numpy.ndarray[numpy.int32_t, ndim=1] target_indices = None,
                   double max_distance = GEODESIC_INF,
                   bool is_one_indexed = False):
-    """
-    This is the wrapper function for computing geodesic distance between a set 
-    of sources and targets on a mesh surface. This function accepts five 
-    arguments:
-        ``vertices``: defines x,y,z coordinates of the mesh's vertices.
-        ``triangles``: defines faces of the mesh as index triplets into vertices.
-        ``source_indices``: Index of the source on the mesh.
-        ``target_indices``: Index of the targets on the mesh.
-        ``max_distance``:
-        ``is_one_indexed``: defines if the index of the triangles data is one-
-        indexed
-    and returns a numpy.ndarray((len(target_indices), ), dtype=numpy.float64) 
-    specifying the shortest distance to the target vertices from the nearest 
-    source vertex on the mesh. If no target_indices are provided, all vertices 
-    of the mesh are considered as targets, however, in this case, specifying 
-    max_distance will limit the targets to those vertices within max_distance of
-    a source.
+    """This is the wrapper function for computing geodesic distance between a
+    set of sources and targets on a mesh surface.
+
+    Args:
+        vertices (numpy.ndarray[numpy.float64_t, ndim=2]): Defines x,y,z
+            coordinates of the mesh's vertices.
+        triangles (numpy.ndarray[numpy.float64_t, ndim=2]): Defines faces of
+            the mesh as index triplets into vertices.
+        source_indices (numpy.ndarray[numpy.int32_t, ndim=1]): Index of the
+            source on the mesh.
+        target_indices (numpy.ndarray[numpy.int32_t, ndim=1]): Index of the
+            targets on the mesh.
+        max_distance (double): Propagation algorithm stops after reaching the
+            certain distance from the source.
+        is_one_indexed (bool): defines if the index of the triangles data is
+            one-indexed.
+
+    Returns:
+        numpy.ndarray((len(target_indices), ), dtype=numpy.float64): Specifying
+        the shortest distance to the target vertices from the nearest source
+        vertex on the mesh. If no target_indices are provided, all vertices of
+        the mesh are considered as targets, however, in this case, specifying
+        max_distance will limit the targets to those vertices within
+        max_distance of a source.
     
     NOTE: This is the function to use when specifying localised stimuli and
     parameter variations. For efficiently using the whole mesh as sources, such
@@ -151,9 +158,8 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         >>> src = numpy.array([1], dtype=numpy.int32)
         >>> trg = numpy.array([2], dtype=numpy.int32)
         >>> import gdist
-        >>> gdist.compute_gdist(vertices, triangles, source_indices = src, target_indices = trg)
-         array([ 0.2])
-    
+        >>> gdist.compute_gdist(vertices, triangles, source_indices=src, target_indices=trg)
+         array([0.2])
     """
     
     cdef Mesh amesh
@@ -209,18 +215,24 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                        numpy.ndarray[numpy.int32_t, ndim=2] triangles,
                        double max_distance = GEODESIC_INF,
                        bool is_one_indexed = False):
-    """
-    This is the wrapper function for computing geodesic distance from every 
+    """This is the wrapper function for computing geodesic distance from every 
     vertex on the surface to all those within a distance ``max_distance`` of 
-    them. The function accepts three arguments:
-        ``vertices``: defines x,y,z coordinates of the mesh's vertices
-        ``triangles``: defines faces of the mesh as index triplets into vertices.
-        ``max_distance``:
-        ``is_one_indexed``: defines if the index of the triangles data is one-
-        indexed
-    and returns a scipy.sparse.csc_matrix((N, N), dtype=numpy.float64), where N
-    is the number of vertices, specifying the shortest distance from all 
-    vertices to all the vertices within max_distance.
+    them.
+
+    Args:
+        vertices (numpy.ndarray[numpy.float64_t, ndim=2]): Defines x,y,z
+            coordinates of the mesh's vertices.
+        triangles (numpy.ndarray[numpy.float64_t, ndim=2]): Defines faces of
+            the mesh as index triplets into vertices.
+        max_distance (double): Propagation algorithm stops after reaching the
+            certain distance from the source.
+        is_one_indexed (bool): defines if the index of the triangles data is
+            one-indexed.
+        
+    Returns:
+        scipy.sparse.csc_matrix((N, N), dtype=numpy.float64): where N
+        is the number of vertices, specifying the shortest distance from all 
+        vertices to all the vertices within max_distance.
     
     Basic usage then looks like::
         >>> import numpy
@@ -239,8 +251,10 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
          [19, 28, 49, 81, 125, 181, 248, 331, 422, 522], # s
          [ 3, 13, 30, 56,  89, 129, 177, 232, 292, 358]] # MB]
          
-    where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024
-    
+    where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024.
+    """
+
+    """
     NOTE: The best_source loop could be sped up considerably by restricting 
           targets to those vertices within max_distance of the source, however,
           this will first require the efficient extraction of this information
