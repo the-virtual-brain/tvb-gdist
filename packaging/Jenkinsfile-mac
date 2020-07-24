@@ -7,8 +7,8 @@ pipeline {
                 sh '''#!/bin/bash
                       source /WORK/anaconda3/anaconda3/etc/profile.d/conda.sh
                       conda activate tvb-gdist
+                      pip uninstall tvb-gdist
                       pip install .
-                      python setup.py build_ext --inplace
                       pytest --junitxml=results.xml
                       exit 0
                 '''
