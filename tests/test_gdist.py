@@ -33,6 +33,8 @@
 """
 
 import numpy as np
+import scipy
+
 import gdist
 
 
@@ -138,3 +140,26 @@ class TestLocalGdistMatrix:
         # test if the obtained matrix is symmetric
         assert (abs(distances - distances.T) > epsilon).nnz == 0
         assert np.max(distances) <= 1.45
+
+
+class TestDistanceMatrixOfSelectedPoints:
+    def test_flat_triangular_mesh(self):
+        data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
+        vertices = data[0:121].astype(np.float64)
+        triangles = data[121:].astype(np.int32)
+        points = np.array([2, 5, 10, 12, 14, 16], dtype=np.int32)
+        distances = gdist.distance_matrix_of_selected_points(
+            vertices,
+            triangles,
+            points,
+        )
+        epsilon = 1e-6
+        expected = np.loadtxt("data/flat_triangular_mesh_pairwise_matrix.txt")
+        np.testing.assert_array_almost_equal(distances.toarray(), expected)
+        # test if the obtained matrix is symmetric
+        assert (abs(distances - distances.T) > epsilon).nnz == 0
+        no_of_points = points.shape[0]
+        # make sure number of non-zero elements are correct
+        assert distances.nnz == no_of_points * no_of_points - no_of_points
+        # `distances` is of type sparse matrix
+        assert type(distances) is scipy.sparse.csc_matrix
