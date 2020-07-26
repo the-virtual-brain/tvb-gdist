@@ -142,11 +142,12 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
 
     Returns:
         numpy.ndarray((len(target_indices), ), dtype=numpy.float64): Specifying
-        the shortest distance to the target vertices from the nearest source
-        vertex on the mesh. If no target_indices are provided, all vertices of
-        the mesh are considered as targets, however, in this case, specifying
-        max_distance will limit the targets to those vertices within
-        max_distance of a source. If no source_indices are provided, it defaults to 0.
+            the shortest distance to the target vertices from the nearest source
+            vertex on the mesh. If no target_indices are provided, all vertices
+            of the mesh are considered as targets, however, in this case,
+            specifying max_distance will limit the targets to those vertices
+            within max_distance of a source. If no source_indices are provided,
+            it defaults to 0.
     
     NOTE: This is the function to use when specifying localised stimuli and
     parameter variations. For efficiently using the whole mesh as sources, such
@@ -282,3 +283,78 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                 data.append(distance)
     
     return scipy.sparse.csc_matrix((data, (rows, columns)), shape=(N, N))
+
+
+def distance_matrix_of_selected_points(
+    numpy.ndarray[numpy.float64_t, ndim=2] vertices,
+    numpy.ndarray[numpy.int32_t, ndim=2] triangles,
+    numpy.ndarray[numpy.int32_t, ndim=1] points,
+    double max_distance = GEODESIC_INF,
+    bool is_one_indexed = False
+):
+    """Function for calculating pairwise geodesic distance for a set of points
+    within a distance ``max_distance`` of them.
+
+    Args:
+        vertices (numpy.ndarray[numpy.float64_t, ndim=2]): Defines x,y,z
+            coordinates of the mesh's vertices.
+        triangles (numpy.ndarray[numpy.float64_t, ndim=2]): Defines faces of
+            the mesh as index triplets into vertices.
+        points (numpy.ndarray[numpy.int32_t, ndim=1]): Indices of the points
+            among which the pairwise distances are to be calculated.
+        max_distance (double): Propagation algorithm stops after reaching the
+            certain distance from the source.
+        is_one_indexed (bool): defines if the index of the triangles data is
+            one-indexed.
+
+    Returns:
+        scipy.sparse.csc_matrix((N, N), dtype=numpy.float64): where N
+            is the number of vertices, specifying the pairwise distances among
+            the given points.
+    
+    Basic usage then looks like::
+        >>> import numpy
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
+        >>> vertices = temp[0:121].astype(numpy.float64)
+        >>> triangles = temp[121:321].astype(numpy.int32)
+        >>> points = numpy.array([2, 5, 10], dtype=numpy.int32)
+        >>> import gdist
+        >>> gdist.distance_matrix_of_selected_points(
+                vertices, triangles, points
+            )
+         <121x121 sparse matrix of type '<class 'numpy.float64'>'
+            with 6 stored elements in Compressed Sparse Column format>
+    """
+
+    cdef vector[unsigned] rows
+    cdef vector[unsigned] columns
+    cdef vector[double] distance_matrix
+    for index_point, point in enumerate(points):
+        target_indices = points[index_point + 1 :]
+
+        source_index = numpy.array([point], dtype=numpy.int32)
+        target_indices = numpy.array(target_indices, dtype=numpy.int32)
+
+        distances = compute_gdist(
+            vertices,
+            triangles,
+            source_index,
+            target_indices,
+            max_distance,
+            is_one_indexed,
+        )
+
+        for index_distance, distance in enumerate(distances):
+            rows.push_back(point)
+            columns.push_back(target_indices[index_distance])
+            distance_matrix.push_back(distance)
+            # symmetric
+            rows.push_back(target_indices[index_distance])
+            columns.push_back(point)
+            distance_matrix.push_back(distance)
+
+    cdef Py_ssize_t no_of_vertices = vertices.shape[0]
+    return scipy.sparse.csc_matrix(
+        (distance_matrix, (rows, columns)),
+        shape=(no_of_vertices, no_of_vertices)
+    )

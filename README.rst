@@ -67,11 +67,12 @@ bool is_one_indexed = False)**
 
     Returns:
         numpy.ndarray((len(target_indices), ), dtype=numpy.float64): Specifying
-        the shortest distance to the target vertices from the nearest source
-        vertex on the mesh. If no target_indices are provided, all vertices of
-        the mesh are considered as targets, however, in this case, specifying
-        max_distance will limit the targets to those vertices within
-        max_distance of a source.
+            the shortest distance to the target vertices from the nearest source
+            vertex on the mesh. If no target_indices are provided, all vertices
+            of the mesh are considered as targets, however, in this case,
+            specifying max_distance will limit the targets to those vertices
+            within max_distance of a source. If no source_indices are provided,
+            it defaults to 0.
     
     NOTE: This is the function to use when specifying localised stimuli and
     parameter variations. For efficiently using the whole mesh as sources, such
@@ -133,6 +134,45 @@ bool is_one_indexed = False)**
          
     where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024.
 
+
+**distance_matrix_of_selected_points(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
+numpy.ndarray[numpy.int32_t, ndim=2] triangles,
+numpy.ndarray[numpy.int32_t, ndim=1] points,
+double max_distance = GEODESIC_INF,
+bool is_one_indexed = False)**
+
+    Function for calculating pairwise geodesic distance for a set of points
+    within a distance ``max_distance`` of them.
+
+    Args:
+        vertices (numpy.ndarray[numpy.float64_t, ndim=2]): Defines x,y,z
+            coordinates of the mesh's vertices.
+        triangles (numpy.ndarray[numpy.float64_t, ndim=2]): Defines faces of
+            the mesh as index triplets into vertices.
+        points (numpy.ndarray[numpy.int32_t, ndim=1]): Indices of the points
+            among which the pairwise distances are to be calculated.
+        max_distance (double): Propagation algorithm stops after reaching the
+            certain distance from the source.
+        is_one_indexed (bool): defines if the index of the triangles data is
+            one-indexed.
+
+    Returns:
+        scipy.sparse.csc_matrix((N, N), dtype=numpy.float64): where N
+            is the number of vertices, specifying the pairwise distances among
+            the given points.
+    
+    Basic usage then looks like::
+        >>> import numpy
+        >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
+        >>> vertices = temp[0:121].astype(numpy.float64)
+        >>> triangles = temp[121:321].astype(numpy.int32)
+        >>> points = numpy.array([2, 5, 10], dtype=numpy.int32)
+        >>> import gdist
+        >>> gdist.distance_matrix_of_selected_points(
+                vertices, triangles, points
+            )
+         <121x121 sparse matrix of type '<class 'numpy.float64'>'
+            with 6 stored elements in Compressed Sparse Column format>
 
 Notes
 =====
