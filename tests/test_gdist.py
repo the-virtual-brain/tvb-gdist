@@ -71,6 +71,21 @@ class TestComputeGdist():
         )
         np.testing.assert_array_almost_equal(distance, [0.2])
 
+    def test_flat_triangular_mesh_no_target(self):
+        data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
+        vertices = data[0:121].astype(np.float64)
+        triangles = data[121:].astype(np.int32)
+        source = np.array([2], dtype=np.int32)
+        target = None
+        distance = gdist.compute_gdist(
+            vertices,
+            triangles,
+            source,
+            target,
+        )
+        expected = np.loadtxt("data/flat_triangular_mesh_no_target.txt")
+        np.testing.assert_array_almost_equal(distance, expected)
+
     def test_hedgehog_mesh(self):
         data = np.loadtxt("data/hedgehog_mesh.txt", skiprows=1)
         vertices = data[0:300].astype(np.float64)
