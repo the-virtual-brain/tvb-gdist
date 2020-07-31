@@ -8,9 +8,10 @@ __pycache__/
 
 # Distribution / packaging
 dist/
+*.egg-info
 
 # coverage file
-.coverage
+.coverage*
 
 # PyCharm generated configuration
 .idea/
@@ -30,3 +31,6 @@ env
 # Shared object files
 *.so
 *.pyd
+
+# generated file during compilation
+gdist.cpp
