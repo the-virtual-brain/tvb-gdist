@@ -45,7 +45,7 @@ import shutil
 import setuptools
 
 import numpy
-from Cython.Distutils import build_ext as _build_ext
+from Cython.Distutils import build_ext
 from Cython.Build.Dependencies import cythonize
 
 
@@ -57,10 +57,8 @@ compiler_directives = {
 define_macros = [('NDEBUG', 1)]
 
 if 'COVERAGE' in os.environ:
-    print('Coverage enabled ...')
-    compiler_directives['profile'] = True
     compiler_directives['linetrace'] = True
-    define_macros.extend([("CYTHON_TRACE", "1"), ("CYTHON_TRACE_NOGIL", "1")])
+    define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
 
 GEODESIC_NAME = "gdist"
 
@@ -88,15 +86,12 @@ INSTALL_REQUIREMENTS = ['numpy', 'scipy', 'cython']
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fd:
     DESCRIPTION = fd.read()
 
-annotate = False
-
-class new_build_ext(_build_ext):
+class new_build_ext(build_ext):
     def finalize_options(self):
         self.distribution.ext_modules[:] = cythonize(
             self.distribution.ext_modules,
             compiler_directives=compiler_directives,
-            annotate=annotate,
-            compile_time_env={"SOLVER_DEBUG": False}
+            annotate=False,
         )
         if not self.include_dirs:
             self.include_dirs = []
