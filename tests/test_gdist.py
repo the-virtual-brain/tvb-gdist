@@ -75,7 +75,7 @@ class TestComputeGdist():
         data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         vertices = data[0:121].astype(np.float64)
         triangles = data[121:].astype(np.int32)
-        source = np.array([2], dtype=np.int32)
+        source = None
         target = None
         distance = gdist.compute_gdist(
             vertices,
