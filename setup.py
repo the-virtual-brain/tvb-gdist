@@ -88,7 +88,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fd:
 
 class new_build_ext(build_ext):
     def finalize_options(self):
-        self.distribution.ext_modules[:] = cythonize(
+        self.distribution.ext_modules = cythonize(
             self.distribution.ext_modules,
             compiler_directives=compiler_directives,
             annotate=False,
