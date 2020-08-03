@@ -170,10 +170,10 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     cdef vector[unsigned] faces
 
     if source_indices is None:
-        source_indices = numpy.arange(0, dtype=numpy.int32)  # default to 0
+        source_indices = numpy.arange(1, dtype=numpy.int32)  # default to 0
     if target_indices is None:
         propagate_on_max_distance = True
-        target_indices = numpy.arange(vertices.size(), dtype=numpy.int32)
+        target_indices = numpy.arange(vertices.shape[0], dtype=numpy.int32)
 
     for k in vertices.flatten():
         points.push_back(k)
