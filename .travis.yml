@@ -3,16 +3,20 @@ notifications:
 
 install:
   - pip3 install .
-  # - python setup.py build_ext --inplace
 script:
-  - pip3 install pytest~=3.6.1
-  - pytest
+  - pip3 install pytest
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then pytest --cov=gdist; else pytest; fi
 
 jobs:
   include:
     - name: "Python 3.8 on Xenial Linux"
       language: python
+      os: linux
       python: 3.8
+      env: COVERAGE=1
+      before_install: pip3 install pytest-cov codecov
+      before_script: python3 setup.py clean --all build_ext --force --inplace
+      after_success: codecov
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell

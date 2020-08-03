@@ -41,10 +41,24 @@ To build::
 """
 
 import os
-import numpy
 import shutil
 import setuptools
+
+import numpy
 from Cython.Distutils import build_ext
+from Cython.Build.Dependencies import cythonize
+
+
+compiler_directives = {
+    'language_level': 3,
+}
+
+# Disable assertions; one is failing geodesic_mesh.h:405
+define_macros = [('NDEBUG', 1)]
+
+if 'COVERAGE' in os.environ:
+    compiler_directives['linetrace'] = True
+    define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
 
 GEODESIC_NAME = "gdist"
 
@@ -53,8 +67,7 @@ GEODESIC_MODULE = [
         name=GEODESIC_NAME,  # Name of extension
         sources=["gdist.pyx"],  # Filename of Cython source
         language="c++",  # Cython create C++ source
-        # Disable assertions; one is failing geodesic_mesh.h:405
-        define_macros=[('NDEBUG', 1)],
+        define_macros=define_macros,
         extra_compile_args=['--std=c++14'],
         extra_link_args=['--std=c++14'],
         include_dirs=[numpy.get_include(), "geodesic_library"],
@@ -73,12 +86,26 @@ INSTALL_REQUIREMENTS = ['numpy', 'scipy', 'cython']
 with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fd:
     DESCRIPTION = fd.read()
 
+class new_build_ext(build_ext):
+    def finalize_options(self):
+        self.distribution.ext_modules = cythonize(
+            self.distribution.ext_modules,
+            compiler_directives=compiler_directives,
+            annotate=False,
+        )
+        if not self.include_dirs:
+            self.include_dirs = []
+        elif isinstance(self.include_dirs, str):
+            self.include_dirs = [self.include_dirs]
+        self.include_dirs.append(numpy.get_include())
+        super().finalize_options()
+
 setuptools.setup(
     name="tvb-" + GEODESIC_NAME,
     version='2.1.0',
     ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
-    cmdclass={'build_ext': build_ext},
+    cmdclass={"build_ext": new_build_ext},
     install_requires=INSTALL_REQUIREMENTS,
     description="Compute geodesic distances",
     long_description=DESCRIPTION,
@@ -88,8 +115,3 @@ setuptools.setup(
     url='https://github.com/the-virtual-brain/tvb-gdist',
     keywords="gdist geodesic distance geo tvb"
 )
-
-shutil.rmtree('tvb_gdist.egg-info', True)
-if os.path.exists(GEODESIC_NAME + '.cpp'):
-    os.remove(GEODESIC_NAME + '.cpp')
-shutil.rmtree('build', True)
