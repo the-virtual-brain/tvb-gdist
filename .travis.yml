@@ -7,6 +7,10 @@ script:
   - pip3 install pytest
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then pytest --cov=gdist; else pytest; fi
 
+.before_script_windows: &before_script_windows
+  - python -m pip install --upgrade pip
+  - pip install --user wheel
+
 jobs:
   include:
     - name: "Python 3.8 on Xenial Linux"
@@ -22,9 +26,22 @@ jobs:
       language: shell
       before_install:
         - choco install python --version 3.8.0
-        - python -m pip install --upgrade pip
-        - pip install --user wheel
+        - *before_script_windows
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+    - name: "Python 3.7.0 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.7.0
+        - *before_script_windows
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+    - name: "Python 3.6.0 on Windows"
+      os: windows
+      language: shell
+      before_install:
+        - choco install python --version 3.6.0
+        - *before_script_windows
+      env: PATH=/c/Python36:/c/Python36/Scripts:$PATH
     - name: "Python 3.7.4 on macOS"
       os: osx
       osx_image: xcode11.2
