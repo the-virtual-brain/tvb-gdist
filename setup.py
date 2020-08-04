@@ -41,7 +41,6 @@ To build::
 """
 
 import os
-import shutil
 import setuptools
 
 import numpy
@@ -50,14 +49,14 @@ from Cython.Build.Dependencies import cythonize
 
 
 compiler_directives = {
-    'language_level': 3,
+    "language_level": 3,
 }
 
 # Disable assertions; one is failing geodesic_mesh.h:405
-define_macros = [('NDEBUG', 1)]
+define_macros = [("NDEBUG", 1)]
 
-if 'COVERAGE' in os.environ:
-    compiler_directives['linetrace'] = True
+if "COVERAGE" in os.environ:
+    compiler_directives["linetrace"] = True
     define_macros.append(("CYTHON_TRACE_NOGIL", "1"))
 
 GEODESIC_NAME = "gdist"
@@ -68,8 +67,8 @@ GEODESIC_MODULE = [
         sources=["gdist.pyx"],  # Filename of Cython source
         language="c++",  # Cython create C++ source
         define_macros=define_macros,
-        extra_compile_args=['--std=c++14'],
-        extra_link_args=['--std=c++14'],
+        extra_compile_args=["--std=c++14"],
+        extra_link_args=["--std=c++14"],
         include_dirs=[numpy.get_include(), "geodesic_library"],
     )
 ]
@@ -81,10 +80,11 @@ INCLUDE_DIRS = [
 
 TEAM = "Danil Kirsanov, Gaurav Malhotra and Stuart Knock"
 
-INSTALL_REQUIREMENTS = ['numpy', 'scipy', 'cython']
+INSTALL_REQUIREMENTS = ["numpy", "scipy", "cython"]
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as fd:
+with open(os.path.join(os.path.dirname(__file__), "README.rst")) as fd:
     DESCRIPTION = fd.read()
+
 
 class new_build_ext(build_ext):
     def finalize_options(self):
@@ -100,18 +100,19 @@ class new_build_ext(build_ext):
         self.include_dirs.append(numpy.get_include())
         super().finalize_options()
 
+
 setuptools.setup(
     name="tvb-" + GEODESIC_NAME,
-    version='2.1.0',
+    version="2.1.0",
     ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
     cmdclass={"build_ext": new_build_ext},
     install_requires=INSTALL_REQUIREMENTS,
     description="Compute geodesic distances",
     long_description=DESCRIPTION,
-    license='GPL v3',
+    license="GPL v3",
     author=TEAM,
-    author_email='tvb.admin@thevirtualbrain.org',
-    url='https://github.com/the-virtual-brain/tvb-gdist',
-    keywords="gdist geodesic distance geo tvb"
+    author_email="tvb.admin@thevirtualbrain.org",
+    url="https://github.com/the-virtual-brain/tvb-gdist",
+    keywords="gdist geodesic distance geo tvb",
 )

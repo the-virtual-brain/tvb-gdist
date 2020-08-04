@@ -38,7 +38,7 @@ import scipy
 import gdist
 
 
-class TestComputeGdist():
+class TestComputeGdist:
     def test_flat_triangular_mesh(self):
         data = np.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
         vertices = data[0:121].astype(np.float64)
@@ -46,28 +46,20 @@ class TestComputeGdist():
         source = np.array([1], dtype=np.int32)
         target = np.array([2], dtype=np.int32)
         distance = gdist.compute_gdist(
-            vertices,
-            triangles,
-            source_indices=source,
-            target_indices=target
+            vertices, triangles, source_indices=source, target_indices=target
         )
         np.testing.assert_array_almost_equal(distance, [0.2])
 
     def test_flat_triangular_mesh_1_indexed(self):
         data = np.loadtxt(
-            "data/flat_triangular_mesh_1_indexed.txt",
-            skiprows=1,
+            "data/flat_triangular_mesh_1_indexed.txt", skiprows=1,
         )
         vertices = data[0:121].astype(np.float64)
         triangles = data[121:].astype(np.int32)
         source = np.array([2], dtype=np.int32)
         target = np.array([3], dtype=np.int32)
         distance = gdist.compute_gdist(
-            vertices,
-            triangles,
-            source,
-            target,
-            is_one_indexed=True,
+            vertices, triangles, source, target, is_one_indexed=True,
         )
         np.testing.assert_array_almost_equal(distance, [0.2])
 
@@ -77,12 +69,7 @@ class TestComputeGdist():
         triangles = data[121:].astype(np.int32)
         source = None
         target = None
-        distance = gdist.compute_gdist(
-            vertices,
-            triangles,
-            source,
-            target,
-        )
+        distance = gdist.compute_gdist(vertices, triangles, source, target,)
         expected = np.loadtxt("data/flat_triangular_mesh_no_target.txt")
         np.testing.assert_array_almost_equal(distance, expected)
 
@@ -93,10 +80,7 @@ class TestComputeGdist():
         source = np.array([0], dtype=np.int32)
         target = np.array([1], dtype=np.int32)
         distance = gdist.compute_gdist(
-            vertices,
-            triangles,
-            source_indices=source,
-            target_indices=target
+            vertices, triangles, source_indices=source, target_indices=target
         )
         np.testing.assert_array_almost_equal(distance, [1.40522])
 
@@ -107,7 +91,7 @@ class TestLocalGdistMatrix:
         vertices = data[0:121].astype(np.float64)
         triangles = data[121:].astype(np.int32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
-        epsilon = 1e-6 # the default value used in `assert_array_almost_equal`
+        epsilon = 1e-6  # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
         assert (abs(distances - distances.T) > epsilon).nnz == 0
         np.testing.assert_array_almost_equal(distances.toarray()[1][0], 0.2)
@@ -119,15 +103,12 @@ class TestLocalGdistMatrix:
 
     def test_flat_triangular_mesh_1_indexed(self):
         data = np.loadtxt(
-            "data/flat_triangular_mesh_1_indexed.txt",
-            skiprows=1,
+            "data/flat_triangular_mesh_1_indexed.txt", skiprows=1,
         )
         vertices = data[0:121].astype(np.float64)
         triangles = data[121:].astype(np.int32)
         distances = gdist.local_gdist_matrix(
-            vertices,
-            triangles,
-            is_one_indexed=True
+            vertices, triangles, is_one_indexed=True
         )
         epsilon = 1e-6  # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
@@ -144,7 +125,7 @@ class TestLocalGdistMatrix:
         vertices = data[0:300].astype(np.float64)
         triangles = data[300:].astype(np.int32)
         distances = gdist.local_gdist_matrix(vertices, triangles)
-        epsilon = 1e-6 # the default value used in `assert_array_almost_equal`
+        epsilon = 1e-6  # the default value used in `assert_array_almost_equal`
         # test if the obtained matrix is symmetric
         assert (abs(distances - distances.T) > epsilon).nnz == 0
         np.testing.assert_array_almost_equal(
@@ -164,9 +145,7 @@ class TestDistanceMatrixOfSelectedPoints:
         triangles = data[121:].astype(np.int32)
         points = np.array([2, 5, 10, 12, 14, 16], dtype=np.int32)
         distances = gdist.distance_matrix_of_selected_points(
-            vertices,
-            triangles,
-            points,
+            vertices, triangles, points,
         )
         epsilon = 1e-6
         expected = np.loadtxt("data/flat_triangular_mesh_pairwise_matrix.txt")
