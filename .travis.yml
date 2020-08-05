@@ -33,4 +33,4 @@ jobs:
       language: python
       install: pip install flake8
       script:
-        - flake8 . --ignore=E501 --show-source --statistics
+        - flake8 . --show-source --statistics
