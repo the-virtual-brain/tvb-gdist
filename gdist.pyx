@@ -30,16 +30,16 @@
 
 """
 This module defines a Cython wrapper for the geodesic distance C++ library.
-The algorithm (implemented in C++) extends Mitchell, Mount and Papadimitriou 
+The algorithm (implemented in C++) extends Mitchell, Mount and Papadimitriou
 (1987) and was written by Danil Kirsanov
 (http://code.google.com/archive/p/geodesic/).
-    
-The interface definitions and wrapper functions are written in Cython syntax 
-(http://cython.org/) and provide an API for some of the classes, functions and 
-constants useful for calculating the geodesic distance. 
+
+The interface definitions and wrapper functions are written in Cython syntax
+(http://cython.org/) and provide an API for some of the classes, functions and
+constants useful for calculating the geodesic distance.
 
 To compile, and build gdist.so using Cython::
-    
+
     python setup.py build_ext --inplace
 
 .. moduleauthor:: Gaurav Malhotra <Gaurav@tvb.invalid>
@@ -47,7 +47,7 @@ To compile, and build gdist.so using Cython::
 
 """
 
-#For compatible datatypes
+# For compatible datatypes
 import numpy
 cimport numpy
 
@@ -103,12 +103,12 @@ cdef get_mesh(
     cdef vector[double] points
     cdef vector[unsigned] faces
 
-    # Map numpy array of mesh "vertices" to C++ vector of mesh "points" 
+    # Map numpy array of mesh "vertices" to C++ vector of mesh "points"
     cdef numpy.float64_t coord
     for coord in vertices.flatten():
         points.push_back(coord)
 
-    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces" 
+    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces"
     cdef numpy.int32_t indx
     for indx in triangles.flatten():
         faces.push_back(indx)
@@ -118,10 +118,10 @@ cdef get_mesh(
 
 def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                   numpy.ndarray[numpy.int32_t, ndim=2] triangles,
-                  numpy.ndarray[numpy.int32_t, ndim=1] source_indices = None,
-                  numpy.ndarray[numpy.int32_t, ndim=1] target_indices = None,
-                  double max_distance = GEODESIC_INF,
-                  bool is_one_indexed = False):
+                  numpy.ndarray[numpy.int32_t, ndim=1] source_indices=None,
+                  numpy.ndarray[numpy.int32_t, ndim=1] target_indices=None,
+                  double max_distance=GEODESIC_INF,
+                  bool is_one_indexed=False):
     """This is the wrapper function for computing geodesic distance between a
     set of sources and targets on a mesh surface.
 
@@ -147,12 +147,12 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
             specifying max_distance will limit the targets to those vertices
             within max_distance of a source. If no source_indices are provided,
             it defaults to 0.
-    
+
     NOTE: This is the function to use when specifying localised stimuli and
     parameter variations. For efficiently using the whole mesh as sources, such
-    as is required to represent local connectivity within the cortex, see the 
+    as is required to represent local connectivity within the cortex, see the
     local_gdist_matrix() function.
-    
+
     Basic usage then looks like::
         >>> import numpy
         >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
@@ -164,7 +164,7 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         >>> gdist.compute_gdist(vertices, triangles, source_indices=src, target_indices=trg)
          array([0.2])
     """
-    
+
     cdef bool propagate_on_max_distance = False
     cdef vector[double] points
     cdef vector[unsigned] faces
@@ -191,16 +191,16 @@ def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     )
     # TODO: Basically copies, can be improved as memory is contiguous.
     distances = numpy.asarray(distances)
-    distances[distances==max_distance] = numpy.inf
+    distances[distances == max_distance] = numpy.inf
     return distances
 
 
 def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                        numpy.ndarray[numpy.int32_t, ndim=2] triangles,
-                       double max_distance = GEODESIC_INF,
-                       bool is_one_indexed = False):
-    """This is the wrapper function for computing geodesic distance from every 
-    vertex on the surface to all those within a distance ``max_distance`` of 
+                       double max_distance=GEODESIC_INF,
+                       bool is_one_indexed=False):
+    """This is the wrapper function for computing geodesic distance from every
+    vertex on the surface to all those within a distance ``max_distance`` of
     them.
 
     Args:
@@ -212,12 +212,12 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
             certain distance from the source.
         is_one_indexed (bool): defines if the index of the triangles data is
             one-indexed.
-        
+
     Returns:
         scipy.sparse.csc_matrix((N, N), dtype=numpy.float64): where N
-        is the number of vertices, specifying the shortest distance from all 
+        is the number of vertices, specifying the shortest distance from all
         vertices to all the vertices within max_distance.
-    
+
     Basic usage then looks like::
         >>> import numpy
         >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
@@ -230,33 +230,33 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
 
     Runtime and guesstimated memory usage as a function of max_distance for the
     reg_13 cortical surface mesh, ie containing 2**13 vertices per hemisphere.
-    :: 
+    ::
         [[10, 20, 30, 40,  50,  60,  70,  80,  90, 100], # mm
          [19, 28, 49, 81, 125, 181, 248, 331, 422, 522], # s
          [ 3, 13, 30, 56,  89, 129, 177, 232, 292, 358]] # MB]
-         
+
     where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024.
     """
 
     """
-    NOTE: The best_source loop could be sped up considerably by restricting 
+    NOTE: The best_source loop could be sped up considerably by restricting
           targets to those vertices within max_distance of the source, however,
           this will first require the efficient extraction of this information
           from the propgate step...
     """
-    
+
     cdef Mesh amesh
     get_mesh(vertices, triangles, amesh, is_one_indexed)
-    
+
     # Define and create object for exact algorithm on that mesh:
     cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
-    
+
     cdef vector[SurfacePoint] source, targets
     cdef Py_ssize_t N = vertices.shape[0]
     cdef Py_ssize_t k
     cdef Py_ssize_t kk
     cdef numpy.float64_t distance = 0
-    
+
     # Add all vertices as targets
     for k in range(N):
         targets.push_back(SurfacePoint(&amesh.vertices()[k]))
@@ -268,10 +268,10 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         source.push_back(SurfacePoint(&amesh.vertices()[k]))
         algorithm.propagate(source, max_distance, NULL)
         source.pop_back()
-        
-        for kk in range(N): #TODO: Reduce to vertices reached during propagate.
+
+        for kk in range(N):  # TODO: Reduce to vertices reached during propagate.
             algorithm.best_source(targets[kk], distance)
-            
+
             if (
                 distance is not GEODESIC_INF
                 and distance is not 0
@@ -280,7 +280,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
                 rows.append(k)
                 columns.append(kk)
                 data.append(distance)
-    
+
     return scipy.sparse.csc_matrix((data, (rows, columns)), shape=(N, N))
 
 
@@ -288,8 +288,8 @@ def distance_matrix_of_selected_points(
     numpy.ndarray[numpy.float64_t, ndim=2] vertices,
     numpy.ndarray[numpy.int32_t, ndim=2] triangles,
     numpy.ndarray[numpy.int32_t, ndim=1] points,
-    double max_distance = GEODESIC_INF,
-    bool is_one_indexed = False
+    double max_distance=GEODESIC_INF,
+    bool is_one_indexed=False
 ):
     """Function for calculating pairwise geodesic distance for a set of points
     within a distance ``max_distance`` of them.
@@ -310,7 +310,7 @@ def distance_matrix_of_selected_points(
         scipy.sparse.csc_matrix((N, N), dtype=numpy.float64): where N
             is the number of vertices, specifying the pairwise distances among
             the given points.
-    
+
     Basic usage then looks like::
         >>> import numpy
         >>> temp = numpy.loadtxt("data/flat_triangular_mesh.txt", skiprows=1)
@@ -329,7 +329,7 @@ def distance_matrix_of_selected_points(
     cdef vector[unsigned] columns
     cdef vector[double] distance_matrix
     for index_point, point in enumerate(points):
-        target_indices = points[index_point + 1 :]
+        target_indices = points[index_point + 1:]
 
         source_index = numpy.array([point], dtype=numpy.int32)
         target_indices = numpy.array(target_indices, dtype=numpy.int32)
