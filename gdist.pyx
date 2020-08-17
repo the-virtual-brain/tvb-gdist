@@ -61,59 +61,17 @@ from libcpp.vector cimport vector
 ################################################################################
 ############ Defininitions to access the C++ geodesic distance library #########
 ################################################################################
-cdef extern from "geodesic_mesh_elements.h" namespace "geodesic":
-    cdef cppclass Vertex:
-        Vertex()
-
-cdef extern from "geodesic_mesh_elements.h" namespace "geodesic":
-    cdef cppclass SurfacePoint:
-        SurfacePoint()
-        SurfacePoint(Vertex*)
-        double& x()
-        double& y()
-        double& z()
-
-cdef extern from "geodesic_mesh.h" namespace "geodesic":
-    cdef cppclass Mesh:
-        Mesh()
-        void initialize_mesh_data(vector[double]&, vector[unsigned]&, bool)
-        vector[Vertex]& vertices()
-
 cdef extern from "geodesic_utils.h":
+    cdef cppclass SparseMatrix:
+        vector[unsigned] rows
+        vector[unsigned] columns
+        vector[double] data
     vector[double] compute_gdist_impl(vector[double], vector[unsigned], vector[unsigned], vector[unsigned], double, bool, bool)
-
-cdef extern from "geodesic_algorithm_exact.h" namespace "geodesic":
-    cdef cppclass GeodesicAlgorithmExact:
-        GeodesicAlgorithmExact(Mesh*)
-        void propagate(vector[SurfacePoint]&, double, vector[SurfacePoint]*)
-        unsigned best_source(SurfacePoint&, double&)
+    SparseMatrix local_gdist_matrix_impl(vector[double], vector[unsigned], double, bool)
 
 cdef extern from "geodesic_constants_and_simple_functions.h" namespace "geodesic":
     double GEODESIC_INF
 ################################################################################
-
-
-cdef get_mesh(
-    numpy.ndarray[numpy.float64_t, ndim=2] vertices,
-    numpy.ndarray[numpy.int32_t, ndim=2] triangles,
-    Mesh &amesh,
-    bool is_one_indexed
-):
-    # Define C++ vectors to contain the mesh surface components.
-    cdef vector[double] points
-    cdef vector[unsigned] faces
-
-    # Map numpy array of mesh "vertices" to C++ vector of mesh "points"
-    cdef numpy.float64_t coord
-    for coord in vertices.flatten():
-        points.push_back(coord)
-
-    # Map numpy array of mesh "triangles" to C++ vector of mesh "faces"
-    cdef numpy.int32_t indx
-    for indx in triangles.flatten():
-        faces.push_back(indx)
-
-    amesh.initialize_mesh_data(points, faces, is_one_indexed)
 
 
 def compute_gdist(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
@@ -244,44 +202,27 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
           this will first require the efficient extraction of this information
           from the propgate step...
     """
-
-    cdef Mesh amesh
-    get_mesh(vertices, triangles, amesh, is_one_indexed)
-
-    # Define and create object for exact algorithm on that mesh:
-    cdef GeodesicAlgorithmExact *algorithm = new GeodesicAlgorithmExact(&amesh)
-
-    cdef vector[SurfacePoint] source, targets
+    
     cdef Py_ssize_t N = vertices.shape[0]
-    cdef Py_ssize_t k
-    cdef Py_ssize_t kk
-    cdef numpy.float64_t distance = 0
 
-    # Add all vertices as targets
-    for k in range(N):
-        targets.push_back(SurfacePoint(&amesh.vertices()[k]))
+    cdef vector[double] points
+    cdef vector[unsigned] faces
 
-    rows = []
-    columns = []
-    data = []
-    for k in range(N):
-        source.push_back(SurfacePoint(&amesh.vertices()[k]))
-        algorithm.propagate(source, max_distance, NULL)
-        source.pop_back()
+    for k in vertices.flatten():
+        points.push_back(k)
+    for k in triangles.flatten():
+        faces.push_back(k)
 
-        for kk in range(N):  # TODO: Reduce to vertices reached during propagate.
-            algorithm.best_source(targets[kk], distance)
-
-            if (
-                distance is not GEODESIC_INF
-                and distance is not 0
-                and distance <= max_distance
-            ):
-                rows.append(k)
-                columns.append(kk)
-                data.append(distance)
-
-    return scipy.sparse.csc_matrix((data, (rows, columns)), shape=(N, N))
+    cdef SparseMatrix distances = local_gdist_matrix_impl(
+        points,
+        faces,
+        max_distance,
+        is_one_indexed,
+    )
+    
+    return scipy.sparse.csc_matrix(
+        (distances.data, (distances.rows, distances.columns)), shape=(N, N)
+    )
 
 
 def distance_matrix_of_selected_points(
