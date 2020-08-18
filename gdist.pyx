@@ -202,7 +202,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
           this will first require the efficient extraction of this information
           from the propgate step...
     """
-    
+
     cdef Py_ssize_t N = vertices.shape[0]
 
     cdef vector[double] points
@@ -219,7 +219,7 @@ def local_gdist_matrix(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
         max_distance,
         is_one_indexed,
     )
-    
+
     return scipy.sparse.csc_matrix(
         (distances.data, (distances.rows, distances.columns)), shape=(N, N)
     )
