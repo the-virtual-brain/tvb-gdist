@@ -49,7 +49,6 @@ for test in "$TEST_SRC_DIR"/*.cpp ; do
     test_dir="$(basename $test)"
     mkdir -p "$test_dir" && pushd "$test_dir"
     $CXX $CXXFLAGS $test -o test $LDFLAGS $COVFLAGS
-    pwd
     ./test
     ls -l
     popd
