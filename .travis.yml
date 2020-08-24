@@ -56,12 +56,6 @@ jobs:
       os: osx
       osx_image: xcode11.2
       language: shell
-      before_install:
-        - brew pin gdal; brew pin postgis; brew pin cairo; brew pin glib; brew pin gnutls; brew pin p11-kit; brew pin gnupg; brew pin poppler;
-        - brew install llvm
-      env:
-        - CC="/usr/local/opt/llvm/bin/clang -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-        - CXX="/usr/local/opt/llvm/bin/clang++ -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
     - stage: lint
       language: python
       install: pip install flake8

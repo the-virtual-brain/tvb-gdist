@@ -182,13 +182,3 @@ Notes
 
 * In order for the algorithm to work the mesh must not be numbered incorrectly
   or disconnected or of somehow degenerate.
-
-* The c++ compiler must have OpenMP installed. This is generally not an issue
-  on g++ or Microsoft Visual Studio. However, in macOS one may need to install
-  llvm from brew in order to use OpenMP: ``brew install llvm``. Then, change the
-  ``CC`` and ``CXX`` environment variables to the following:
-
-  .. code-block:: txt
-
-     CC="/usr/local/opt/llvm/bin/clang -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-     CXX="/usr/local/opt/llvm/bin/clang++ -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
