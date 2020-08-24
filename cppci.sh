@@ -62,4 +62,4 @@ $LCOV --directory "$BUILD_DIR" --base-directory "$PROJECT_DIR" --capture --outpu
 # Keep only the project headers in the coverage data by 
 # removing the tests themselves and the extra libraries
 $LCOV --remove "$COVERAGE_FILE" "/usr*" "$TEST_SRC_DIR/*" "$EXTRA_DIR/*" -o "$COVERAGE_FILE"
-bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+bash <(curl -s https://codecov.io/bash) -cF cpp || echo "Codecov did not collect coverage reports"
