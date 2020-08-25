@@ -18,9 +18,19 @@ jobs:
       os: linux
       python: 3.8
       env: COVERAGE=1
+      addons:
+        apt:
+          update: true
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
       before_install: pip3 install pytest-cov codecov
       before_script: python3 setup.py clean --all build_ext --force --inplace
-      after_success: codecov
+      after_script:
+        - sudo chmod +x cppci.sh
+        - ./cppci.sh
+      after_success: bash <(curl -s https://codecov.io/bash) -cF python
     - name: "Python 3.8.0 on Windows"
       os: windows
       language: shell
