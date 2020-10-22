@@ -67,8 +67,10 @@ GEODESIC_MODULE = [
         sources=["gdist.pyx"],  # Filename of Cython source
         language="c++",  # Cython create C++ source
         define_macros=define_macros,
-        extra_compile_args=["--std=c++14"],
-        extra_link_args=["--std=c++14"],
+        # TODO: Monitor the c++1y option. Maybe in the future this won't be available anymore so we will have to use
+        #  it's correspondent: c++14 (TVB-2797)
+        extra_compile_args=["--std=c++1y"],
+        extra_link_args=["--std=c++1y"],
         include_dirs=[numpy.get_include(), "geodesic_library"],
     )
 ]
