@@ -127,10 +127,10 @@ bool is_one_indexed = False)**
 
     Runtime and guesstimated memory usage as a function of max_distance for the
     reg_13 cortical surface mesh, ie containing 2**13 vertices per hemisphere.
-    :: 
-        [[10, 20, 30, 40,  50,  60,  70,  80,  90, 100], # mm
-         [19, 28, 49, 81, 125, 181, 248, 331, 422, 522], # s
-         [ 3, 13, 30, 56,  89, 129, 177, 232, 292, 358]] # MB]
+    ::
+    [[10, 20, 30, 40,  50,  60,  70,  80,  90, 100], # mm
+    [19, 28, 49, 81, 125, 181, 248, 331, 422, 522], # s
+    [ 3, 13, 30, 56,  89, 129, 177, 232, 292, 358]] # MB]
          
     where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024.
 

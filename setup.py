@@ -112,6 +112,7 @@ setuptools.setup(
     install_requires=INSTALL_REQUIREMENTS,
     description="Compute geodesic distances",
     long_description=DESCRIPTION,
+    long_description_content_type='text/x-rst',
     license="GPL v3",
     author=TEAM,
     author_email="tvb.admin@thevirtualbrain.org",
