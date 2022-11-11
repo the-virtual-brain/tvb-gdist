@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'docker_build'
+    }
 
     environment {
         FULL_DOCKER_IMAGE_NAME = 'docker-repository.codemart.ro/tvb-gdist'
@@ -16,32 +18,26 @@ pipeline {
             }
         }
         stage ('Build for Pypi') {
-            agent {
-                docker {
-                    image '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}'
-                }
-            }
             steps {
-                sh '''#!/bin/bash
-                    cd packaging
-                    bash package_for_pip.sh
-                '''
+                withDockerContainer(image: '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}') {
+                    sh '''#!/bin/bash
+                        cd packaging
+                        bash package_for_pip.sh
+                    '''
+                }
                 archiveArtifacts artifacts: 'dist/*'
             }
         }
         stage ('Run unit-tests') {
-            agent {
-                docker {
-                    image '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}'
-                }
-            }
             steps {
-                sh '''#!/bin/bash
-                    pip install .
-                    python setup.py build_ext --inplace
-                    pytest --junitxml=results.xml
-                    exit 0
-                '''
+                withDockerContainer(image: '${FULL_DOCKER_IMAGE_NAME}:${LATEST_TAG}') {
+                    sh '''#!/bin/bash
+                        pip install .
+                        python setup.py build_ext --inplace
+                        pytest --junitxml=results.xml
+                        exit 0
+                    '''
+                 }
                  junit 'results.xml'
             }
         }
