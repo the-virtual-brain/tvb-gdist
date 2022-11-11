@@ -5,7 +5,7 @@ pipeline {
         stage ('Run unit-tests') {
             steps {
                 sh '''#!/bin/bash
-                      source /WORK/anaconda3/anaconda3/etc/profile.d/conda.sh
+                      source /Applications/anaconda3/etc/profile.d/conda.sh
                       conda activate tvb-gdist
                       pip uninstall -y tvb-gdist
                       pip install .
@@ -18,7 +18,7 @@ pipeline {
         stage ('Build Mac WHL') {
             steps {
                 sh '''#!/bin/bash
-                      source /WORK/anaconda3/anaconda3/etc/profile.d/conda.sh
+                      source /Applications/anaconda3/etc/profile.d/conda.sh
                       conda activate tvb-gdist
                       cd packaging
                       bash package_for_pip.sh
