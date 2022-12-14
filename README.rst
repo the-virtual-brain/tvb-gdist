@@ -135,7 +135,7 @@ bool is_one_indexed = False)**
     where memory is a min-guestimate given by: mem_req = nnz * 8 / 1024 / 1024.
 
 
-**distance_matrix_of_selected_points(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
+**gdist.distance_matrix_of_selected_points(numpy.ndarray[numpy.float64_t, ndim=2] vertices,
 numpy.ndarray[numpy.int32_t, ndim=2] triangles,
 numpy.ndarray[numpy.int32_t, ndim=1] points,
 double max_distance = GEODESIC_INF,
