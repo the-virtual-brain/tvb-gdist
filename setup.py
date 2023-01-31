@@ -105,7 +105,7 @@ class new_build_ext(build_ext):
 
 setuptools.setup(
     name="tvb-" + GEODESIC_NAME,
-    version="2.1.0",
+    version="2.1.1",
     ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
     cmdclass={"build_ext": new_build_ext},
