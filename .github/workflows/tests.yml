@@ -1,0 +1,43 @@
+name: Test
+
+on: push
+
+env:
+  COVERAGE: 1
+
+jobs:
+  run_tests_py_3_10:
+    name: Run tests on ${{ matrix.os }} with python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ ubuntu-20.04, windows-2019, macOS-11 ]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+            python -m pip install --upgrade pip
+            pip install pytest pytest-cov
+
+      - name: Install project
+        run:  |
+          pip install .
+          python setup.py clean --all build_ext --force --inplace
+
+      - name: Run tests
+        run: |
+          pytest --junitxml=results.xml --cov
+
+      - name: Run Coverage Generation
+        if: matrix.os == 'ubuntu-20.04'
+        run: |
+          sudo chmod +x cppci.sh
+          ./cppci.sh
+          bash <(curl -s https://codecov.io/bash) -cF python
