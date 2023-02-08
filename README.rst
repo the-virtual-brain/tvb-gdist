@@ -2,8 +2,6 @@
 Geodesic Library 
 =================
 
-.. image:: https://travis-ci.com/the-virtual-brain/tvb-gdist.svg?branch=trunk
-    :target: https://travis-ci.com/the-virtual-brain/tvb-gdist
 
 The **tvb-gdist** module is a Cython interface to a C++ library
 (https://code.google.com/archive/p/geodesic/) for computing
