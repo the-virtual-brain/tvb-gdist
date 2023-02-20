@@ -42,11 +42,9 @@ To build::
 
 import os
 import setuptools
-
 import numpy
 from Cython.Distutils import build_ext
 from Cython.Build.Dependencies import cythonize
-
 
 compiler_directives = {
     "language_level": 3,
@@ -105,7 +103,7 @@ class new_build_ext(build_ext):
 
 setuptools.setup(
     name="tvb-" + GEODESIC_NAME,
-    version="2.1.1",
+    version="2.1.2",
     ext_modules=GEODESIC_MODULE,
     include_dirs=INCLUDE_DIRS,
     cmdclass={"build_ext": new_build_ext},
