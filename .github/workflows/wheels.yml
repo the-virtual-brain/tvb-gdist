@@ -1,6 +1,8 @@
 name: Build
 
-on: push
+on:
+  release:
+    types: [published]
 
 jobs:
   build_wheels:
@@ -54,8 +56,8 @@ jobs:
           name: artifact
           path: dist
 
-#      - uses: pypa/gh-action-pypi-publish@v1.5.0
-#        with:
-#          user: ${{ secrets.PYPI_USER }}
-#          password: ${{ secrets.PYPI_PASSWORD }}
-##          repository_url: https://test.pypi.org/legacy/
+      - uses: pypa/gh-action-pypi-publish@v1.5.0
+        with:
+          user: ${{ secrets.PYPI_USER }}
+          password: ${{ secrets.PYPI_PASSWORD }}
+#          repository_url: https://test.pypi.org/legacy/
