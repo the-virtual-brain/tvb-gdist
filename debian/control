@@ -1,0 +1,24 @@
+Source: tvb-gdist
+Maintainer: the virtual brain <tvb.debian@codemart.ro>
+Uploaders: umar haruna abdullahi <umarbrowser20@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: cython,
+               debhelper (>=11),
+               dh-python,
+               python-all,
+               python-numpy,
+               python-scipy,
+               python-setuptools
+Standards-Version: 4.1.4.2
+Vcs-Browser: https://github.com/the-virtual-brain/tvb-geodesic
+Vcs-Git: https://github.com/the-virtual-brain/tvb-geodesic.git
+Homepage: http://www.thevirtualbrain.org
+
+Package: tvb-gdist
+Architecture: any
+Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}
+Description: gdist module is a Cython interface
+ computing geodesic distance which is the length of shortest
+ line between two vertices on a triangulated mesh in three
+ dimensions, such that the line lies on the surface
