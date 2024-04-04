@@ -6,25 +6,25 @@ env:
   COVERAGE: 1
 
 jobs:
-  run_tests_py_3_10:
+  run_tests:
     name: Run tests on ${{ matrix.os }} with python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04, windows-2019, macOS-11 ]
+        os: [ ubuntu-latest, windows-latest, macOS-13 ]
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install dependencies
         run: |
             python -m pip install --upgrade pip
-            pip install pytest pytest-cov
+            pip install setuptools pytest pytest-cov
 
       - name: Install project
         run:  |
@@ -36,7 +36,7 @@ jobs:
           pytest --junitxml=results.xml --cov
 
       - name: Run Coverage Generation
-        if: matrix.os == 'ubuntu-20.04'
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           sudo chmod +x cppci.sh
           ./cppci.sh
