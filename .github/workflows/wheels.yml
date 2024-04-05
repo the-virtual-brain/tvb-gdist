@@ -1,8 +1,6 @@
 name: Build
 
-on:
-  release:
-    types: [published]
+on: push
 
 jobs:
   build_wheels:
@@ -56,8 +54,11 @@ jobs:
           name: artifact
           path: dist
 
-      - uses: pypa/gh-action-pypi-publish@v1.5.0
-        with:
-          user: ${{ secrets.PYPI_USER }}
-          password: ${{ secrets.PYPI_PASSWORD }}
-#          repository_url: https://test.pypi.org/legacy/
+      - name: Release on Pypi
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USER }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASS }}
+        run: |
+          echo "Publishing on pypi..."
+          python -m pip install -U twine
+          twine upload dist/*
