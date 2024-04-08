@@ -61,4 +61,4 @@ jobs:
         run: |
           echo "Publishing on pypi..."
           python -m pip install -U twine
-          twine upload dist/*
+          twine upload dist/* --verbose
