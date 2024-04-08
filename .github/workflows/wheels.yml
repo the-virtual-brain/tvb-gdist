@@ -1,6 +1,8 @@
 name: Build
 
-on: push
+on:
+  release:
+    types: [published]
 
 jobs:
   build_wheels:
@@ -61,4 +63,4 @@ jobs:
         run: |
           echo "Publishing on pypi..."
           python -m pip install -U twine
-          twine upload dist/* --verbose
+          twine upload dist/* 
