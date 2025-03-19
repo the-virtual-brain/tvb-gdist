@@ -30,6 +30,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
 
   build_sdist:
@@ -43,17 +44,34 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
+          name: sdist
           path: dist/*.tar.gz
 
-  upload_pypi:
+  # merge all artifacts together to make the upload_pypi job easier
+  # otherwise we would have to write each artifact name explicitly in the download step from upload_pypi
+  merge_artifacts:
+    name: Merge artifacts
     needs: [build_wheels, build_sdist]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v4
+      - name: Merge wheels
+        uses: actions/upload-artifact/merge@v4
         with:
-          # unpacks default artifact into dist/
-          # if `name: artifact` is omitted, the action will create extra parent dir
-          name: artifact
+          name: merged-artifact
+          patterns: |
+            wheels-*
+            sdist
+          delete-merged: true
+
+  upload_pypi:
+    name: Upload to PyPI
+    needs: merge_artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download merged artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: merged-artifact
           path: dist
 
       - name: Release on Pypi
